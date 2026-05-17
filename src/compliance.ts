@@ -1,4 +1,4 @@
-import { Contract, nativeToScVal } from '@stellar/stellar-sdk';
+import { Contract, nativeToScVal, rpc } from '@stellar/stellar-sdk';
 import { AegisClient } from './client';
 import { parseSorobanResult } from './utils/xdr-parser';
 
@@ -26,8 +26,10 @@ constructor(client: AegisClient) {
         transaction: call as any, // Cast required depending on SDK version wrapper
       } as any);
 
-      if (rpc.Api.isSimulationSuccess(result)) {
-         return parseSorobanResult(result.result?.retval as any) as boolean;
+      // rpc.Api.isSimulationSuccess acts as a type guard here
+      // Check for success AND ensure the result object actually exists
+      if (rpc.Api.isSimulationSuccess(result) && result.result) {
+         return parseSorobanResult(result.result.retval as any) as boolean;
       }
       return false;
     } catch (error) {
