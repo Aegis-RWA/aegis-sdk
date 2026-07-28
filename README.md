@@ -44,6 +44,7 @@ console.log('Can receive transfer?', capability.isPermitted);
 
 ## Testing
 To run the SDK unit tests locally:
+
 ```
 npm run test
 ```
@@ -54,6 +55,18 @@ runtime compatibility checks:
 ```bash
 npm run check
 ```
+
+### Pre-submit verification
+
+Run all checks (lint, format, build, test, compat) in a single command before
+submitting a PR:
+
+```bash
+npm run verify
+```
+
+See [Verification Command](docs/verification.md) for detailed usage and
+troubleshooting guidance.
 
 See [Runtime Compatibility](docs/runtime-compatibility.md) for the supported
 environments, what the automated probes cover, and integration guidance.
