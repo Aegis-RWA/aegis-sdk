@@ -2,7 +2,7 @@ import { rpc, Keypair } from '@stellar/stellar-sdk';
 import { ComplianceModule } from './compliance';
 import { AssetModule } from './asset';
 import { InvestorModule } from './investor/portfolio';
-import { resolveClientConfig, AegisClientConfig } from './config/validate';
+import { RoleModule } from './role';
 
 export { AegisClientConfig };
 
@@ -16,6 +16,7 @@ export class AegisClient {
   public compliance: ComplianceModule;
   public asset: AssetModule;
   public investor: InvestorModule;
+  public role: RoleModule;
 
   /**
    * Initializes the Aegis RWA SDK Client.
@@ -36,6 +37,7 @@ export class AegisClient {
     this.compliance = new ComplianceModule(this);
     this.asset = new AssetModule(this);
     this.investor = new InvestorModule(this);
+    this.role = new RoleModule(this);
   }
 
   /**
@@ -46,5 +48,25 @@ export class AegisClient {
       throw new Error("Transaction signing requires a Keypair to be configured on the AegisClient.");
     }
     return this.keypair;
+  }
+
+  /**
+   * Runs an SDK network operation behind the stable network-failure boundary.
+   */
+  public async runNetworkOperation<T>(
+    operation: () => Promise<T>
+  ): Promise<T> {
+    try {
+      return await operation();
+    } catch (error) {
+      throw classifyNetworkFailure(error);
+    }
+  }
+
+  /**
+   * Builds a serialisable, redacted diagnostic for support and dashboard UI.
+   */
+  public diagnoseNetworkFailure(error: unknown): NetworkFailureDiagnostic {
+    return buildNetworkFailureDiagnostic(error);
   }
 }
