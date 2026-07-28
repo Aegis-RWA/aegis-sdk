@@ -31,6 +31,9 @@ async function main() {
 
 main();
 ```
+## Migration Guide
+Migrating from raw Soroban contract calls? See the [Migration Guide](./docs/migration-guide.md) for before/after comparisons covering compliance checks, minting, transfers, portfolio reads, and error handling.
+
 ## Testing
 To run the SDK unit tests locally:
 ```
