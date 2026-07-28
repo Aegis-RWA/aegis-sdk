@@ -58,5 +58,8 @@ npm run check
 See [Runtime Compatibility](docs/runtime-compatibility.md) for the supported
 environments, what the automated probes cover, and integration guidance.
 
+## Self-Review
+Before opening a PR, run through our [self-review checklist](docs/self-review-template.md) to catch common issues early.
+
 ## Contributing
 We welcome contributions! Please check our CONTRIBUTING.md for our branching strategy and code style guidelines.
