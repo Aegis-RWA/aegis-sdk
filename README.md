@@ -31,6 +31,18 @@ async function main() {
 
 main();
 ```
+## Role Discovery & Capability Checks
+Check what an address is classified as, and what it can currently attempt through the SDK.
+This is a client-side convenience for UI gating, not on-chain authorization — see the
+[full documentation](./docs/role-discovery.md) for important caveats.
+```TypeScript
+const roleResult = await aegis.role.discoverRole('G_USER_PUBLIC_KEY');
+console.log('Role:', roleResult.role); // 'investor' | 'unauthorized' | 'unknown'
+
+const capability = await aegis.role.checkCapability('G_USER_PUBLIC_KEY', 'receive_transfer');
+console.log('Can receive transfer?', capability.isPermitted);
+```
+
 ## Testing
 To run the SDK unit tests locally:
 ```
