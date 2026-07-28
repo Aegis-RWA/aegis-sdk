@@ -58,5 +58,7 @@ npm run check
 See [Runtime Compatibility](docs/runtime-compatibility.md) for the supported
 environments, what the automated probes cover, and integration guidance.
 
+For step-by-step instructions on reproducing and fixing CI check failures, see the [CI Resolution Workflow](docs/ci-resolution-workflow.md).
+
 ## Contributing
-We welcome contributions! Please check our CONTRIBUTING.md for our branching strategy and code style guidelines.
+We welcome contributions! Please check our [CONTRIBUTING.md](CONTRIBUTING.md) for our branching strategy, code style guidelines, and [CI Resolution Workflow](docs/ci-resolution-workflow.md).
