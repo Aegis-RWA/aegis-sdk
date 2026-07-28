@@ -23,6 +23,10 @@ Read model service for building investor dashboard views.
 * `getPortfolio(investorAddress: string, options?: FetchPortfolioOptions): Promise<InvestorPortfolio>`
   Fetches investor balances, KYC whitelist compliance, asset metadata, formatted display balances, transfer eligibility, and operational portfolio status (`active`, `empty`, `blocked`, `unavailable`).
 
+## Testing Utilities
+
+For local tests and dashboard examples, import the mock client from `@aegis/sdk/testing` (not the main entry point). See [Testing Utilities Documentation](./testing.md).
+
 ## Error Handling Strategies
 
 Soroban transactions and RPC queries can fail for several reasons. The SDK manages errors with custom taxonomy (`PortfolioError`) and safe fallbacks:

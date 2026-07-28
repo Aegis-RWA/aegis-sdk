@@ -37,5 +37,13 @@ To run the SDK unit tests locally:
 npm run test
 ```
 
+For predictable responses in dashboard or unit tests without live RPC, use the local mock client:
+
+```typescript
+import { createMockAegisClient, createMockFixtures } from '@aegis/sdk/testing';
+```
+
+See [Testing Utilities](./docs/testing.md) for fixtures, transaction receipts, and export details.
+
 ## Contributing
 We welcome contributions! Please check our CONTRIBUTING.md for our branching strategy and code style guidelines.
