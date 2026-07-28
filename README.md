@@ -42,6 +42,25 @@ const capability = await aegis.role.checkCapability('G_USER_PUBLIC_KEY', 'receiv
 console.log('Can receive transfer?', capability.isPermitted);
 ```
 
+## Contract Event Decoder
+Decode Soroban contract events into typed audit-trail models for dashboards and indexers.
+
+```typescript
+import { decodeContractEvent } from '@aegis/sdk';
+
+const event = decodeContractEvent({
+  topic: rpcEvent.topic,
+  value: rpcEvent.value,
+  txHash: rpcEvent.txHash,
+});
+
+if (event.kind === 'transfer') {
+  console.log(event.from, event.to, event.amount);
+}
+```
+
+See [Contract Event Decoder](./docs/contract-events.md) for supported topics, unknown fallback behaviour, and dashboard integration guidance.
+
 ## Testing
 To run the SDK unit tests locally:
 ```
