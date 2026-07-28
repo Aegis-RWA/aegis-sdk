@@ -2,11 +2,7 @@ import { rpc, Keypair, Networks } from '@stellar/stellar-sdk';
 import { ComplianceModule } from './compliance';
 import { AssetModule } from './asset';
 import { InvestorModule } from './investor/portfolio';
-import {
-  NetworkFailureDiagnostic,
-  buildNetworkFailureDiagnostic,
-} from './diagnostics/network';
-import { classifyNetworkFailure } from './network/failures';
+import { RoleModule } from './role';
 
 export interface AegisClientConfig {
   rpcUrl: string;
@@ -25,6 +21,7 @@ export class AegisClient {
   public compliance: ComplianceModule;
   public asset: AssetModule;
   public investor: InvestorModule;
+  public role: RoleModule;
 
   /**
    * Initializes the Aegis RWA SDK Client.
@@ -41,6 +38,7 @@ export class AegisClient {
     this.compliance = new ComplianceModule(this);
     this.asset = new AssetModule(this);
     this.investor = new InvestorModule(this);
+    this.role = new RoleModule(this);
   }
 
   /**
