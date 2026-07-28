@@ -58,5 +58,8 @@ npm run check
 See [Runtime Compatibility](docs/runtime-compatibility.md) for the supported
 environments, what the automated probes cover, and integration guidance.
 
+If CI is failing on your PR, see the [Failing CI Response Guide](docs/ci-response-guide.md)
+for step-by-step troubleshooting.
+
 ## Contributing
 We welcome contributions! Please check our CONTRIBUTING.md for our branching strategy and code style guidelines.
