@@ -4,6 +4,16 @@
   "description": "The official TypeScript SDK for the Aegis RWA Protocol on Soroban.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./testing": {
+      "types": "./dist/testing/index.d.ts",
+      "default": "./dist/testing/index.js"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "test": "jest",
