@@ -11,6 +11,10 @@ We welcome open-source contributions! As middleware, this SDK is critical for th
 
 Search the codebase for `// TODO:` comments to find areas that need immediate help!
 
+## Contributor Evaluation Policy
+
+All contributions submitted for compensation are evaluated through the GrantFox platform **after merge**. Merging a PR does not automatically guarantee payment approval. Please read the full [Contributor Evaluation Policy](docs/contributor-evaluation-policy.md) for details on evaluation criteria, payment-period conduct, and what is expected for approval.
+
 ## Updating API Reference Documentation
 
 When you add or change a public method on `ComplianceModule`, `AssetModule`, `InvestorModule`, or an exported utility/type, update `docs/api-reference.md` (and `docs/investor-portfolio.md` if the investor read model changes). Review checklist:

@@ -59,4 +59,6 @@ See [Runtime Compatibility](docs/runtime-compatibility.md) for the supported
 environments, what the automated probes cover, and integration guidance.
 
 ## Contributing
-We welcome contributions! Please check our CONTRIBUTING.md for our branching strategy and code style guidelines.
+We welcome contributions! Please check our [CONTRIBUTING.md](CONTRIBUTING.md) for our branching strategy and code style guidelines.
+
+Before contributing, please read our [Contributor Evaluation Policy](docs/contributor-evaluation-policy.md) to understand how contributions are evaluated, the role of GrantFox in the review process, and what is expected for approval.
