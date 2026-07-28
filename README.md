@@ -31,19 +31,33 @@ async function main() {
 
 main();
 ```
+## Role Discovery & Capability Checks
+Check what an address is classified as, and what it can currently attempt through the SDK.
+This is a client-side convenience for UI gating, not on-chain authorization — see the
+[full documentation](./docs/role-discovery.md) for important caveats.
+```TypeScript
+const roleResult = await aegis.role.discoverRole('G_USER_PUBLIC_KEY');
+console.log('Role:', roleResult.role); // 'investor' | 'unauthorized' | 'unknown'
+
+const capability = await aegis.role.checkCapability('G_USER_PUBLIC_KEY', 'receive_transfer');
+console.log('Can receive transfer?', capability.isPermitted);
+```
+
 ## Testing
 To run the SDK unit tests locally:
 ```
 npm run test
 ```
 
-For predictable responses in dashboard or unit tests without live RPC, use the local mock client:
+Run the full release gate, including TypeScript compilation and browser/Node
+runtime compatibility checks:
 
-```typescript
-import { createMockAegisClient, createMockFixtures } from '@aegis/sdk/testing';
+```bash
+npm run check
 ```
 
-See [Testing Utilities](./docs/testing.md) for fixtures, transaction receipts, and export details.
+See [Runtime Compatibility](docs/runtime-compatibility.md) for the supported
+environments, what the automated probes cover, and integration guidance.
 
 ## Contributing
 We welcome contributions! Please check our CONTRIBUTING.md for our branching strategy and code style guidelines.

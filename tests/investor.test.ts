@@ -139,7 +139,10 @@ describe('InvestorModule (Portfolio Read Model)', () => {
       expect(portfolio.status).toBe('unavailable');
       expect(portfolio.isKycApproved).toBe(false);
       expect(portfolio.isBlocked).toBe(true);
-      expect(portfolio.error).toContain('Network RPC Connection Timeout');
+      expect(portfolio.error).toBe(
+        'Compliance status query failed: The network request timed out.'
+      );
+      expect(portfolio.error).not.toContain('Network RPC Connection Timeout');
       expect(portfolio.holdings).toHaveLength(0);
     });
 
