@@ -59,4 +59,11 @@ See [Runtime Compatibility](docs/runtime-compatibility.md) for the supported
 environments, what the automated probes cover, and integration guidance.
 
 ## Contributing
-We welcome contributions! Please check our CONTRIBUTING.md for our branching strategy and code style guidelines.
+
+We welcome contributions! Please check our [CONTRIBUTING.md](CONTRIBUTING.md)
+for the development workflow, branching strategy, and code style guidelines.
+
+Before opening a pull request, review the
+[PR Evidence Checklist](docs/pr-evidence-checklist.md) — every PR must include
+an issue reference, implementation summary, test evidence, command output, CI
+status, and acceptance criteria coverage.
