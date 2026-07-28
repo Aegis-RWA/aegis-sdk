@@ -13,6 +13,7 @@ describe('AegisClient Configuration', () => {
     expect(client.contractId).toBe('C...');
     expect(client.compliance).toBeDefined();
     expect(client.asset).toBeDefined();
+    expect(client.events).toBeDefined();
   });
 
   it('should throw an error when attempting a write operation without a keypair', () => {
