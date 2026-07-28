@@ -14,7 +14,7 @@ Search the codebase for `// TODO:` comments to find areas that need immediate he
 
 ## Updating API Reference Documentation
 
-When you add or change a public method on `ComplianceModule`, `AssetModule`, `InvestorModule`, or an exported utility/type, update `docs/api-reference.md` (and `docs/investor-portfolio.md` if the investor read model changes). Review checklist:
+When you add or change a public method on `ComplianceModule`, `AssetModule`, `InvestorModule`, `EventsModule`, or an exported utility/type, update `docs/api-reference.md` (and `docs/investor-portfolio.md` if the investor read model changes; `docs/contract-events.md` if event decoding changes). Review checklist:
 
 - [ ] The signature block matches the method's actual TypeScript signature (parameter names, types, return type).
 - [ ] The Parameters section lists every parameter, including optional ones and their defaults.
@@ -23,3 +23,4 @@ When you add or change a public method on `ComplianceModule`, `AssetModule`, `In
 - [ ] The example uses only placeholder keys/addresses (`G...`, `C...`, `S...`) — never a real secret key or mainnet contract ID.
 - [ ] Anything the source leaves ambiguous, incomplete, or marked with a `// TODO` is called out as an explicit note rather than assumed or omitted.
 - [ ] If the change affects compliance/whitelist-gated behavior, the compliance disclaimer at the top of `docs/api-reference.md` still accurately describes it.
+- [ ] If the change affects contract event decoding, follow the checklist in `docs/contract-events.md` (edge cases, unknown fallback, and security/compliance assumptions).

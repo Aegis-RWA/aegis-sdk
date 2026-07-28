@@ -3,6 +3,14 @@ export { ComplianceModule } from './compliance';
 export { AssetModule } from './asset';
 export { InvestorModule } from './investor/portfolio';
 export { RoleModule } from './role';
+export { EventsModule } from './events/module';
+export { decodeContractEvent, decodeContractEvents } from './events/decoder';
+export {
+  AEGIS_EVENT_TOPICS,
+  isKnownAegisEventTopic,
+  normalizeEventTopicName,
+} from './events/topics';
+export { decodeScVal, decodeEventName } from './soroban/scval';
 export { parseSorobanResult } from './utils/xdr-parser';
 export {
   buildAdminActionReceipt,
@@ -24,5 +32,7 @@ export * from './errors/role';
 export * from './types/admin-receipt';
 export * from './errors/network';
 export * from './errors/config';
+export * from './types/contract-event';
+export * from './errors/event';
 export type { AegisEnvironmentName, AegisEnvironmentPreset } from './config/environments';
 export type { ResolvedAegisConfig } from './config/validate';
