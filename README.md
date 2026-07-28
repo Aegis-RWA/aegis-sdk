@@ -31,36 +31,33 @@ async function main() {
 
 main();
 ```
-
-## Admin action receipts
-
-Build typed, network-aware receipts for whitelist updates, asset registration,
-pause actions, and minting without exposing raw RPC response data:
-
+## Role Discovery & Capability Checks
+Check what an address is classified as, and what it can currently attempt through the SDK.
+This is a client-side convenience for UI gating, not on-chain authorization — see the
+[full documentation](./docs/role-discovery.md) for important caveats.
 ```TypeScript
-import { Networks } from '@stellar/stellar-sdk';
-import { buildAdminActionReceipt } from '@aegis/sdk';
+const roleResult = await aegis.role.discoverRole('G_USER_PUBLIC_KEY');
+console.log('Role:', roleResult.role); // 'investor' | 'unauthorized' | 'unknown'
 
-const receipt = buildAdminActionReceipt({
-  operation: 'protocol-pause',
-  target: { contractId: 'C_YOUR_CONTRACT_ID' },
-  status: 'SUCCESS',
-  transactionHash: 'a'.repeat(64),
-  networkPassphrase: Networks.TESTNET,
-});
-
-console.log(receipt.status);
-console.log(receipt.explorerUrl);
+const capability = await aegis.role.checkCapability('G_USER_PUBLIC_KEY', 'receive_transfer');
+console.log('Can receive transfer?', capability.isPermitted);
 ```
-
-See [Admin action receipts](docs/admin-action-receipts.md) for the complete
-status mapping, custom-network behavior, and data-handling guarantees.
 
 ## Testing
 To run the SDK unit tests locally:
 ```
 npm run test
 ```
+
+Run the full release gate, including TypeScript compilation and browser/Node
+runtime compatibility checks:
+
+```bash
+npm run check
+```
+
+See [Runtime Compatibility](docs/runtime-compatibility.md) for the supported
+environments, what the automated probes cover, and integration guidance.
 
 ## Contributing
 We welcome contributions! Please check our CONTRIBUTING.md for our branching strategy and code style guidelines.

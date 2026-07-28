@@ -2,12 +2,9 @@ export { AegisClient, AegisClientConfig } from './client';
 export { ComplianceModule } from './compliance';
 export { AssetModule } from './asset';
 export { InvestorModule } from './investor/portfolio';
+export { RoleModule } from './role';
 export { parseSorobanResult } from './utils/xdr-parser';
 export * from './types/portfolio';
 export * from './errors/portfolio';
-export {
-  buildAdminActionReceipt,
-  buildAdminTransactionExplorerUrl,
-  normalizeAdminActionStatus,
-} from './admin/receipts';
-export * from './types/admin-receipt';
+export * from './types/role';
+export * from './errors/role';
