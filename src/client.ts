@@ -3,6 +3,7 @@ import { ComplianceModule } from './compliance';
 import { AssetModule } from './asset';
 import { InvestorModule } from './investor/portfolio';
 import { RoleModule } from './role';
+import { EventsModule } from './events/module';
 import { AegisClientConfig, resolveClientConfig } from './config/validate';
 import { classifyNetworkFailure } from './network/failures';
 import {
@@ -23,6 +24,7 @@ export class AegisClient {
   public asset: AssetModule;
   public investor: InvestorModule;
   public role: RoleModule;
+  public events: EventsModule;
 
   /**
    * Initializes the Aegis RWA SDK Client.
@@ -44,6 +46,7 @@ export class AegisClient {
     this.asset = new AssetModule(this);
     this.investor = new InvestorModule(this);
     this.role = new RoleModule(this);
+    this.events = new EventsModule(this);
   }
 
   /**
