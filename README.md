@@ -31,6 +31,12 @@ async function main() {
 
 main();
 ```
+## Documentation
+* [API Reference](./docs/api-reference.md) — `AegisClient`, `ComplianceModule`, `AssetModule`, `InvestorModule`, utilities, and exported types/errors.
+* [Investor Portfolio Read Model](./docs/investor-portfolio.md) — the `InvestorPortfolio` data model in detail.
+
+> **Compliance disclaimer:** This SDK exposes protocol-level whitelist/KYC checks and RWA token operations against the Aegis Soroban contract. It reports what the contract reports (e.g. whitelist status) — it does not constitute legal, financial, or regulatory compliance advice. Consult qualified counsel for compliance decisions.
+
 ## Testing
 To run the SDK unit tests locally:
 ```
