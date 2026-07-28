@@ -1,29 +1,31 @@
 import { rpc, Keypair, Networks } from '@stellar/stellar-sdk';
 import { ComplianceModule } from './compliance';
 import { AssetModule } from './asset';
+import { InvestorModule } from './investor/portfolio';
 
 export interface AegisClientConfig {
-rpcUrl: string;
-networkPassphrase: string;
-contractId: string;
-keypair?: Keypair; // Optional: If not provided, client is read-only
+  rpcUrl: string;
+  networkPassphrase: string;
+  contractId: string;
+  keypair?: Keypair; // Optional: If not provided, client is read-only
 }
 
 export class AegisClient {
-public rpcServer: rpc.Server;
-public contractId: string;
-public networkPassphrase: string;
-public keypair?: Keypair;
+  public rpcServer: rpc.Server;
+  public contractId: string;
+  public networkPassphrase: string;
+  public keypair?: Keypair;
 
-// Modules
-public compliance: ComplianceModule;
-public asset: AssetModule;
+  // Modules
+  public compliance: ComplianceModule;
+  public asset: AssetModule;
+  public investor: InvestorModule;
 
-/**
-* Initializes the Aegis RWA SDK Client.
-* @param config AegisClientConfig object
-*/
-constructor(config: AegisClientConfig) {
+  /**
+   * Initializes the Aegis RWA SDK Client.
+   * @param config AegisClientConfig object
+   */
+  constructor(config: AegisClientConfig) {
     this.rpcServer = new rpc.Server(config.rpcUrl);
     this.contractId = config.contractId;
     this.networkPassphrase = config.networkPassphrase;
@@ -33,6 +35,7 @@ constructor(config: AegisClientConfig) {
 
     this.compliance = new ComplianceModule(this);
     this.asset = new AssetModule(this);
+    this.investor = new InvestorModule(this);
   }
 
   /**
