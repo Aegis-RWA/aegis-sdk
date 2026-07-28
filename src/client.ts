@@ -3,8 +3,14 @@ import { ComplianceModule } from './compliance';
 import { AssetModule } from './asset';
 import { InvestorModule } from './investor/portfolio';
 import { RoleModule } from './role';
+import { AegisClientConfig, resolveClientConfig } from './config/validate';
+import { classifyNetworkFailure } from './network/failures';
+import {
+  buildNetworkFailureDiagnostic,
+  NetworkFailureDiagnostic,
+} from './diagnostics/network';
 
-export { AegisClientConfig };
+export type { AegisClientConfig };
 
 export class AegisClient {
   public rpcServer: rpc.Server;
