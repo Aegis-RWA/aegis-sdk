@@ -1,5 +1,7 @@
 # Contract Event Decoder
 
+> **Compliance disclaimer:** Decoded compliance and whitelist events reflect protocol-level state reported by the Aegis Soroban contract. This SDK and its documentation do **not** constitute legal, financial, or regulatory compliance advice. Consult qualified counsel for compliance decisions.
+
 The contract event decoder turns raw Soroban RPC events into typed Aegis audit-trail models for dashboards, indexers, and compliance monitors.
 
 ## Supported event categories
@@ -81,6 +83,27 @@ for (const event of events) {
 }
 ```
 
+## Edge cases and failure states
+
+| Scenario | Non-strict (default) | Strict mode |
+| -------- | -------------------- | ----------- |
+| Empty or missing topics | `kind: 'unknown'` | throws `EventDecodeError` (`EMPTY_TOPICS` / `INVALID_EVENT_INPUT`) |
+| Unknown topic name | `kind: 'unknown'` with reason | throws `UNSUPPORTED_EVENT` |
+| Malformed value XDR | `kind: 'unknown'` with reason | throws `VALUE_DECODE_FAILED` |
+| Known topic, missing required fields | `kind: 'unknown'` with reason | throws `UNSUPPORTED_EVENT` |
+| RPC `getEvents` network failure | Propagates via `client.runNetworkOperation` as `NetworkFailure` | same |
+
+Always handle `kind === 'unknown'` in UI code. Do not treat an `unknown` decode as a successful typed audit event.
+
+## Security and compliance-sensitive assumptions
+
+- **Protocol vs legal compliance:** Whitelist / KYC events are on-chain protocol signals only. Do not present them as KYC legal clearance or investment advice.
+- **No secrets in events:** Decoded models keep addresses, amounts, and topic names. Do not attach private keys, seed phrases, or raw signing material to event models or logs.
+- **Trust boundary:** Events prove what a successful contract call emitted. They are not a substitute for verifying transaction inclusion, signature validity, or admin authorization off-chain.
+- **Successful calls only:** Prefer filtering on `inSuccessfulContractCall === true` for audit rows; failed invocations may still appear in diagnostic streams depending on RPC configuration.
+- **Amount units:** Amounts are returned as raw integer strings (contract scale). Dashboard formatting must apply asset `decimals` separately.
+- **Contract catalogue drift:** Topic names follow the Aegis event catalogue with aliases for forward compatibility. New contract topics land as `unknown` until the SDK map is extended.
+
 ## Dashboard integration guidance
 
 1. **Audit trail table** — group decoded events by `txHash` and `ledger`, then map `kind` to UI columns (compliance, mint/transfer amount, admin action, metadata).
@@ -120,3 +143,14 @@ const value = nativeToScVal(1_000_000n).toXDR('base64');
 ```
 
 See `tests/events-decoder.test.ts` for full coverage of each event category and unknown fallback behaviour.
+
+## Contributor review checklist
+
+When changing the event decoder or event docs:
+
+- [ ] New or changed topics are listed in the supported categories table above.
+- [ ] Unknown / malformed inputs still produce a safe `unknown` fallback unless `strict: true` is documented.
+- [ ] Compliance-related wording keeps the protocol-vs-legal disclaimer intact.
+- [ ] Fixtures in `tests/fixtures/contract-events.ts` cover the new path.
+- [ ] `docs/api-reference.md` and README links still point at this guide.
+- [ ] Examples use placeholder addresses (`G...`, `C...`) only — never real secrets.
