@@ -59,4 +59,9 @@ See [Runtime Compatibility](docs/runtime-compatibility.md) for the supported
 environments, what the automated probes cover, and integration guidance.
 
 ## Contributing
-We welcome contributions! Please check our CONTRIBUTING.md for our branching strategy and code style guidelines.
+We welcome contributions! Please check our [CONTRIBUTING.md](CONTRIBUTING.md) for our branching strategy and code style guidelines.
+
+To ensure your contributions meet evaluation standards, please review:
+- [Pull Request Reviewer Checklist](docs/reviewer-checklist.md) for review criteria.
+- [Low-Effort PR Examples & Standards Guide](docs/low-effort-pr-examples.md) for common anti-patterns to avoid and high-quality alternatives.
+
