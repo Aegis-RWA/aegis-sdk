@@ -21,6 +21,7 @@ Either `environment` or both `rpcUrl` and `networkPassphrase` must be provided. 
 * `client.asset`: Minting & transferring RWA tokens module (`AssetModule`).
 * `client.investor`: Investor portfolio read model module (`InvestorModule`). See [Investor Portfolio Documentation](./investor-portfolio.md).
 * `client.role`: Role discovery & capability checks module (`RoleModule`). See [Role Discovery & Capability Checks Documentation](./role-discovery.md).
+* `client.events`: Contract event fetch/decode module (`EventsModule`). See [Contract Event Decoder Documentation](./contract-events.md).
 
 ---
 
@@ -175,6 +176,19 @@ for the full security note.
   Evaluates a single capability (`view_portfolio`, `receive_transfer`, `initiate_transfer`, `mint_asset`).
 * `getCapabilityMatrix(address: string): Promise<CapabilityMatrix>`
   Evaluates all known capabilities for an address in one call.
+
+## `EventsModule` & event decoder
+
+Typed Soroban contract event decoding for audit trails. See [Contract Event Decoder Documentation](./contract-events.md).
+
+### Methods
+* `client.events.decode(input, options?)` — decode a single raw or parsed RPC event.
+* `client.events.fetchAndDecode(request, options?)` — call `getEvents` and decode the response.
+
+### Standalone helpers
+* `decodeContractEvent(input, options?)` — pure decoder with `unknown` fallback by default.
+* `decodeContractEvents(inputs, options?)` — batch decode preserving order.
+* `normalizeEventTopicName(name)` / `isKnownAegisEventTopic(name)` — topic compatibility helpers.
 
 ## Error Handling Strategies
 
