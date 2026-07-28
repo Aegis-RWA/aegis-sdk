@@ -31,6 +31,28 @@ async function main() {
 
 main();
 ```
+
+## Network failure handling
+
+SDK network operations expose stable, redacted failure codes and safe support
+diagnostics:
+
+```TypeScript
+import { NetworkFailure } from '@aegis/sdk';
+
+try {
+  await client.compliance.checkWhitelist('G...');
+} catch (error) {
+  if (error instanceof NetworkFailure) {
+    console.log(error.code);
+    console.log(error.retryable);
+  }
+}
+```
+
+See [Network failure handling](docs/network-failures.md) for the complete
+classification and diagnostics model.
+
 ## Testing
 To run the SDK unit tests locally:
 ```

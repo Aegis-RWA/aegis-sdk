@@ -2,6 +2,11 @@ import { rpc, Keypair, Networks } from '@stellar/stellar-sdk';
 import { ComplianceModule } from './compliance';
 import { AssetModule } from './asset';
 import { InvestorModule } from './investor/portfolio';
+import {
+  NetworkFailureDiagnostic,
+  buildNetworkFailureDiagnostic,
+} from './diagnostics/network';
+import { classifyNetworkFailure } from './network/failures';
 
 export interface AegisClientConfig {
   rpcUrl: string;
@@ -46,5 +51,25 @@ export class AegisClient {
       throw new Error("Transaction signing requires a Keypair to be configured on the AegisClient.");
     }
     return this.keypair;
+  }
+
+  /**
+   * Runs an SDK network operation behind the stable network-failure boundary.
+   */
+  public async runNetworkOperation<T>(
+    operation: () => Promise<T>
+  ): Promise<T> {
+    try {
+      return await operation();
+    } catch (error) {
+      throw classifyNetworkFailure(error);
+    }
+  }
+
+  /**
+   * Builds a serialisable, redacted diagnostic for support and dashboard UI.
+   */
+  public diagnoseNetworkFailure(error: unknown): NetworkFailureDiagnostic {
+    return buildNetworkFailureDiagnostic(error);
   }
 }

@@ -5,3 +5,6 @@ export { InvestorModule } from './investor/portfolio';
 export { parseSorobanResult } from './utils/xdr-parser';
 export * from './types/portfolio';
 export * from './errors/portfolio';
+export * from './errors/network';
+export * from './network/failures';
+export * from './diagnostics/network';
