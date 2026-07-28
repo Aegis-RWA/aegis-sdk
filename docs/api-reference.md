@@ -1,5 +1,7 @@
 # API Reference
 
+> **Compliance disclaimer:** `ComplianceModule` and the whitelist-gated behavior of `AssetModule` reflect protocol-level checks performed by the Aegis Soroban contract (e.g. `is_whitelisted`). They report what the contract reports — this SDK and its documentation do not constitute legal, financial, or regulatory compliance advice. Consult qualified counsel for compliance decisions.
+
 ## `AegisClient`
 
 The entry point for interacting with the Aegis Protocol.
@@ -15,6 +17,138 @@ The entry point for interacting with the Aegis Protocol.
 * `client.asset`: Minting & transferring RWA tokens module (`AssetModule`).
 * `client.investor`: Investor portfolio read model module (`InvestorModule`). See [Investor Portfolio Documentation](./investor-portfolio.md).
 * `client.role`: Role discovery & capability checks module (`RoleModule`). See [Role Discovery & Capability Checks Documentation](./role-discovery.md).
+
+---
+
+## `ComplianceModule`
+
+Whitelist / KYC verification module. Accessed via `client.compliance`. Wraps the contract's `is_whitelisted` read-only function.
+
+### `checkWhitelist(address: string): Promise<boolean>`
+
+Queries the contract to check if a user is KYC-approved (whitelisted).
+
+**Signature**
+```typescript
+public async checkWhitelist(address: string): Promise<boolean>
+```
+
+**Parameters**
+* `address` (string): The Stellar public key (`G...`) to check.
+
+**Returns**
+`Promise<boolean>` — `true` if the simulated call to `is_whitelisted` succeeds and decodes to `true`. Resolves to `false` both when the contract reports the address is not whitelisted, *and* when the simulation does not succeed or returns no result — the current implementation does not distinguish those two cases in its return value.
+
+**Errors**
+* If `simulateTransaction` itself throws (network failure, malformed request, etc.), the error is logged via `console.error` and then re-thrown as-is. It is the raw error from the underlying `@stellar/stellar-sdk` RPC call — `checkWhitelist` does not wrap it in `PortfolioError` or any other typed error.
+* A failed/unsuccessful simulation that does *not* throw is swallowed and reported as `false` (see Returns above), not as an error.
+
+**Example**
+```typescript
+import { AegisClient } from '@aegis/sdk';
+import { Networks } from '@stellar/stellar-sdk';
+
+const client = new AegisClient({
+  rpcUrl: 'https://soroban-testnet.stellar.org',
+  networkPassphrase: Networks.TESTNET,
+  contractId: 'C...', // Aegis Protocol Contract ID
+});
+
+try {
+  const isWhitelisted = await client.compliance.checkWhitelist('G_USER_PUBLIC_KEY');
+  console.log('Is User Whitelisted?', isWhitelisted);
+} catch (error) {
+  // Raised on RPC/network failure during simulation — not a PortfolioError.
+  console.error('Whitelist check failed:', error);
+}
+```
+
+> **Open note:** `checkWhitelist` passes the raw invocation object returned by `contract.call(...)` directly as the `transaction` field to `simulateTransaction` (cast through `as any`), rather than assembling a full `Transaction` via `TransactionBuilder` the way `AssetModule.mint`/`transfer` do. The source itself flags this with a comment ("Cast required depending on SDK version wrapper"), so the exact request shape expected by `simulateTransaction` across `@stellar/stellar-sdk` versions is not fully confirmed — verify against the installed SDK version rather than assuming it's stable.
+
+---
+
+## `AssetModule`
+
+Minting & transferring RWA tokens. Accessed via `client.asset`. Both methods require the `AegisClient` to be constructed with a `keypair`, since they build and sign a state-changing transaction.
+
+### `mint(to: string, amount: number): Promise<string>`
+
+Submits a transaction to mint new RWA tokens by calling the contract's `mint_asset` function.
+
+**Signature**
+```typescript
+public async mint(to: string, amount: number): Promise<string>
+```
+
+**Parameters**
+* `to` (string): Stellar public key of the recipient.
+* `amount` (number): Amount to mint, passed to the contract as an `i128` via `nativeToScVal`.
+
+**Returns**
+`Promise<string>` — the transaction hash (`response.hash`) returned by `sendTransaction` immediately after submission. This confirms the transaction was *submitted*, not that it was included in a ledger or succeeded — the method does not poll for final status.
+
+**Errors**
+* Throws a plain `Error` synchronously (via `client.requireSigner()`) if the `AegisClient` was constructed without a `keypair`: `"Transaction signing requires a Keypair to be configured on the AegisClient."`
+* If `sendTransaction` rejects (e.g. the ledger rejects the transaction due to a missing authorization, a non-whitelisted recipient, or a bad sequence number), the error is caught and re-thrown as a new generic `Error` with message `` `Mint transaction failed: ${error}` ``. The original error is interpolated into the message string only — it is not attached as `.cause`, and it is not a `PortfolioError` or other typed error.
+
+**Example**
+```typescript
+import { AegisClient } from '@aegis/sdk';
+import { Networks, Keypair } from '@stellar/stellar-sdk';
+
+const client = new AegisClient({
+  rpcUrl: 'https://soroban-testnet.stellar.org',
+  networkPassphrase: Networks.TESTNET,
+  contractId: 'C...',
+  keypair: issuerKeypair, // required for mint/transfer; omit for read-only usage
+});
+
+try {
+  const txHash = await client.asset.mint('G_RECIPIENT_PUBLIC_KEY', 1000);
+  console.log('Mint submitted, tx hash:', txHash);
+} catch (error) {
+  console.error('Mint failed:', error);
+}
+```
+
+> **Open notes (from the source itself):**
+> * The transaction's source `Account` sequence number is currently hardcoded to `"0"` (`new Account(signer.publicKey(), "0")`). A comment in `src/asset.ts` reads: *"In production, you must fetch the real sequence number for the account."* As written, this will not build a valid transaction against an account with a non-zero sequence number — confirm this has been resolved before using `mint` against a real account.
+> * There is no pre-submission simulation. A `// TODO` in the source notes: *"Implement transaction simulation endpoint before submitting to check for auth/whitelist failures."* Authorization or whitelist failures currently only surface as a submission-time error from `sendTransaction`, not as an upfront check.
+> * The unit/scale of `amount` (e.g. whether it should already account for the asset's `decimals`) is not documented or validated in the source — confirm against the deployed contract's `mint_asset` implementation before use.
+
+### `transfer(to: string, amount: number): Promise<string>`
+
+Transfers RWA tokens to another address by calling the contract's `transfer` function. Built the same way as `mint` (manual `TransactionBuilder`, hardcoded source sequence number, no pre-submission simulation).
+
+**Signature**
+```typescript
+public async transfer(to: string, amount: number): Promise<string>
+```
+
+**Parameters**
+* `to` (string): Stellar public key of the recipient.
+* `amount` (number): Amount to transfer, passed to the contract as an `i128` via `nativeToScVal`.
+
+**Returns**
+`Promise<string>` — transaction hash from `sendTransaction`, with the same "submission, not confirmation" caveat as `mint`.
+
+**Errors**
+* Same `requireSigner()` precondition as `mint` (throws if no `keypair` is configured).
+* Catches `sendTransaction` failures and re-throws a generic `Error` with message `` `Transfer transaction failed: ${error}` ``. The source has an open `// TODO: Improve error typing for unauthorized transfer attempts` — a transfer rejected for compliance reasons (e.g. recipient not whitelisted) is not currently distinguishable, by error type, from any other submission failure.
+
+**Example**
+```typescript
+try {
+  const txHash = await client.asset.transfer('G_RECIPIENT_PUBLIC_KEY', 500);
+  console.log('Transfer submitted, tx hash:', txHash);
+} catch (error) {
+  console.error('Transfer failed:', error);
+}
+```
+
+> **Open note:** the same hardcoded sequence-number-`"0"` caveat described under `mint` applies here, since `transfer` builds its transaction the same way.
+
+---
 
 ## `InvestorModule`
 
@@ -45,3 +179,5 @@ Soroban transactions and RPC queries can fail for several reasons. The SDK manag
 2. **Transaction Timeouts:** If the Stellar network is congested and the transaction is not included in a ledger within the timeout window.
 3. **XDR Parsing Errors:** If the contract returns data that does not match the expected return type.
 4. **Safe Read Model Fallbacks:** Portfolio queries intercept network/RPC failures and return an `InvestorPortfolio` with `status: 'unavailable'` to prevent frontend application crashes.
+
+> **Open note:** as described above under [Exported Types & Errors](#exported-types--errors-srcindexts), point 4 (safe fallbacks) matches what `InvestorModule.getPortfolio` does today, but `PortfolioError` itself is not currently thrown by `checkWhitelist`, `mint`, or `transfer` — those surface plain `Error` objects instead. Treat this section as the intended error-handling strategy for the SDK rather than a description of every method's current exact error type.
