@@ -31,11 +31,17 @@ async function main() {
 
 main();
 ```
-## Documentation
-* [API Reference](./docs/api-reference.md) — `AegisClient`, `ComplianceModule`, `AssetModule`, `InvestorModule`, utilities, and exported types/errors.
-* [Investor Portfolio Read Model](./docs/investor-portfolio.md) — the `InvestorPortfolio` data model in detail.
+## Role Discovery & Capability Checks
+Check what an address is classified as, and what it can currently attempt through the SDK.
+This is a client-side convenience for UI gating, not on-chain authorization — see the
+[full documentation](./docs/role-discovery.md) for important caveats.
+```TypeScript
+const roleResult = await aegis.role.discoverRole('G_USER_PUBLIC_KEY');
+console.log('Role:', roleResult.role); // 'investor' | 'unauthorized' | 'unknown'
 
-> **Compliance disclaimer:** This SDK exposes protocol-level whitelist/KYC checks and RWA token operations against the Aegis Soroban contract. It reports what the contract reports (e.g. whitelist status) — it does not constitute legal, financial, or regulatory compliance advice. Consult qualified counsel for compliance decisions.
+const capability = await aegis.role.checkCapability('G_USER_PUBLIC_KEY', 'receive_transfer');
+console.log('Can receive transfer?', capability.isPermitted);
+```
 
 ## Testing
 To run the SDK unit tests locally:

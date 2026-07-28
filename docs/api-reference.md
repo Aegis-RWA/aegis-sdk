@@ -16,6 +16,7 @@ The entry point for interacting with the Aegis Protocol.
 * `client.compliance`: Whitelist & KYC verification module (`ComplianceModule`).
 * `client.asset`: Minting & transferring RWA tokens module (`AssetModule`).
 * `client.investor`: Investor portfolio read model module (`InvestorModule`). See [Investor Portfolio Documentation](./investor-portfolio.md).
+* `client.role`: Role discovery & capability checks module (`RoleModule`). See [Role Discovery & Capability Checks Documentation](./role-discovery.md).
 
 ---
 
@@ -157,54 +158,19 @@ Read model service for building investor dashboard views.
 * `getPortfolio(investorAddress: string, options?: FetchPortfolioOptions): Promise<InvestorPortfolio>`
   Fetches investor balances, KYC whitelist compliance, asset metadata, formatted display balances, transfer eligibility, and operational portfolio status (`active`, `empty`, `blocked`, `unavailable`).
 
-See [Investor Portfolio Documentation](./investor-portfolio.md) for the full data model, options, and error-handling behavior.
+## `RoleModule`
 
----
+Client-side role discovery and capability checks. Not a substitute for on-chain
+authorization — see [Role Discovery & Capability Checks Documentation](./role-discovery.md)
+for the full security note.
 
-## Utilities
-
-### `parseSorobanResult(resultXdr: string): any`
-
-Decodes a base64-encoded Soroban XDR return value (as found on `SimulateTransactionSuccessResponse.result.retval`) into a native JS/TS value, using `xdr.ScVal.fromXDR(resultXdr, 'base64')` followed by `scValToNative(...)` from `@stellar/stellar-sdk`.
-
-* Returns `null` if given a falsy `resultXdr`.
-* Throws a plain `Error("XDR Parsing failed.")` if decoding fails. The original error is logged via `console.error` but is not attached to the thrown error.
-* Used internally by `ComplianceModule.checkWhitelist` and `InvestorModule.getPortfolio`; exported from the package root (`import { parseSorobanResult } from '@aegis/sdk'`) for consumers who need to decode raw simulation results themselves.
-
-> **Open note:** the source has a `// TODO: Create comprehensive XDR error mapping` — there is currently no mapping from Soroban-specific error codes to readable messages; all decode failures surface as the same generic `"XDR Parsing failed."` string.
-
----
-
-## Exported Types & Errors (`src/index.ts`)
-
-In addition to `AegisClient`, `AegisClientConfig`, `ComplianceModule`, `AssetModule`, `InvestorModule`, and `parseSorobanResult`, the package root re-exports:
-
-* From `types/portfolio`: `PortfolioStatus`, `TransferEligibility`, `AssetMetadata`, `AssetHolding`, `InvestorPortfolio`, `FetchPortfolioOptions` — the read-model types described in [Investor Portfolio Documentation](./investor-portfolio.md).
-* From `errors/portfolio`: `PortfolioErrorCode` (a union of `'RPC_FAILURE' | 'PARSE_ERROR' | 'COMPLIANCE_ERROR' | 'UNAVAILABLE' | 'INVALID_ADDRESS'`) and the `PortfolioError` class (`message`, `code: PortfolioErrorCode`, optional `cause`).
-
-> **Open note:** `PortfolioError` is imported in `src/investor/portfolio.ts` but, as of this version of the source, is never actually constructed or thrown anywhere in the codebase. `InvestorModule.getPortfolio()` reports failures by returning an `InvestorPortfolio` object with `status: 'unavailable'` and a plain `error: string` message instead of throwing. Likewise, `ComplianceModule.checkWhitelist` and `AssetModule.mint`/`transfer` only ever throw plain `Error` instances, never `PortfolioError`. Treat `PortfolioError`/`PortfolioErrorCode` as reserved for future use rather than something current methods are documented to throw.
-
----
-
-## Known Edge Cases & Failure States
-
-Quick-reference summary of the edge cases called out in the sections above, for auditing without reading every "Open note" inline:
-
-| Module / Method | Scenario | Current Behavior |
-| :--- | :--- | :--- |
-| `ComplianceModule.checkWhitelist` | Simulation succeeds and decodes to `false` | Resolves `false`. |
-| `ComplianceModule.checkWhitelist` | Simulation is unsuccessful or returns no result (no exception thrown) | Resolves `false` — indistinguishable from "not whitelisted" in the return value. |
-| `ComplianceModule.checkWhitelist` | `simulateTransaction` throws (network/RPC error) | Logs to `console.error`, then re-throws the raw underlying error (not a `PortfolioError`). |
-| `AssetModule.mint` / `transfer` | `AegisClient` constructed without a `keypair` | Throws a plain `Error` synchronously, before any network call. |
-| `AssetModule.mint` / `transfer` | `sendTransaction` rejects (auth failure, non-whitelisted recipient, bad sequence number, etc.) | Re-thrown as a new generic `Error` with the original error interpolated into the message string; original error is not preserved as `.cause` and is not a `PortfolioError`. |
-| `AssetModule.mint` / `transfer` | Recipient is not whitelisted | Not checked before submission (no pre-flight simulation); only surfaces as a `sendTransaction` failure at the ledger level. |
-| `AssetModule.mint` / `transfer` | Source account sequence number | Hardcoded to `"0"` rather than fetched from the network — will not build a valid transaction for a real, non-zero-sequence account. |
-| `parseSorobanResult` | XDR decode failure | Logs the original error, then throws a new generic `Error("XDR Parsing failed.")` with no error code / no original error attached. |
-| `PortfolioError` / `PortfolioErrorCode` (exported from `index.ts`) | Any failure in `checkWhitelist`, `mint`, or `transfer` | Never constructed or thrown by current methods — reserved for future use, not part of their documented error contract today. |
-
-These are documented as observed in the current source rather than fixed here, per the scope of this documentation task — see the per-method "Open note" callouts above for the exact source references.
-
----
+### Methods
+* `discoverRole(address: string): Promise<RoleDiscoveryResult>`
+  Classifies an address as `investor`, `unauthorized`, or `unknown` based on whitelist status.
+* `checkCapability(address: string, capability: CapabilityName): Promise<CapabilityCheckResult>`
+  Evaluates a single capability (`view_portfolio`, `receive_transfer`, `initiate_transfer`, `mint_asset`).
+* `getCapabilityMatrix(address: string): Promise<CapabilityMatrix>`
+  Evaluates all known capabilities for an address in one call.
 
 ## Error Handling Strategies
 
