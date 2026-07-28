@@ -1,14 +1,10 @@
-import { rpc, Keypair, Networks } from '@stellar/stellar-sdk';
+import { rpc, Keypair } from '@stellar/stellar-sdk';
 import { ComplianceModule } from './compliance';
 import { AssetModule } from './asset';
 import { InvestorModule } from './investor/portfolio';
+import { resolveClientConfig, AegisClientConfig } from './config/validate';
 
-export interface AegisClientConfig {
-  rpcUrl: string;
-  networkPassphrase: string;
-  contractId: string;
-  keypair?: Keypair; // Optional: If not provided, client is read-only
-}
+export { AegisClientConfig };
 
 export class AegisClient {
   public rpcServer: rpc.Server;
@@ -23,15 +19,19 @@ export class AegisClient {
 
   /**
    * Initializes the Aegis RWA SDK Client.
-   * @param config AegisClientConfig object
+   * @param config AegisClientConfig object. Provide either an `environment` preset
+   * (`testnet` | `local` | `mainnet`) or explicit `rpcUrl`/`networkPassphrase` values.
    */
   constructor(config: AegisClientConfig) {
-    this.rpcServer = new rpc.Server(config.rpcUrl);
-    this.contractId = config.contractId;
-    this.networkPassphrase = config.networkPassphrase;
+    const resolved = resolveClientConfig(config);
+    const allowHttp = resolved.rpcUrl.startsWith('http://');
+
+    this.rpcServer = new rpc.Server(resolved.rpcUrl, { allowHttp });
+    this.contractId = resolved.contractId;
+    this.networkPassphrase = resolved.networkPassphrase;
 
     // TODO: Add support for browser-based wallet providers (Freighter/Albedo)
-    this.keypair = config.keypair;
+    this.keypair = resolved.keypair;
 
     this.compliance = new ComplianceModule(this);
     this.asset = new AssetModule(this);

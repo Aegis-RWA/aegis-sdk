@@ -9,16 +9,15 @@ npm install @aegis/sdk
 ```
 
 ## Quickstart
-Initialize the client and query the compliance module.
-```TypeScipt
+Initialize the client with a typed environment preset and query the compliance module.
+```TypeScript
 import { AegisClient } from '@aegis/sdk';
-import { Networks, Keypair } from '@stellar/stellar-sdk';
+import { Keypair } from '@stellar/stellar-sdk';
 
 const adminKeypair = Keypair.fromSecret('S...');
 
 const aegis = new AegisClient({
-  rpcUrl: '[https://soroban-testnet.stellar.org:443](https://soroban-testnet.stellar.org:443)',
-  networkPassphrase: Networks.TESTNET,
+  environment: 'testnet', // or 'local'; see docs/environments.md
   contractId: 'C_YOUR_CONTRACT_ID',
   keypair: adminKeypair // Optional for read-only calls
 });
@@ -31,6 +30,11 @@ async function main() {
 
 main();
 ```
+
+Presets cover `testnet` and `local` out of the box. `mainnet` is defined but gated behind
+`allowMainnet: true` until the Aegis protocol is live there. You can still pass explicit
+`rpcUrl`/`networkPassphrase` values instead of `environment` if you need a fully custom
+endpoint — see [docs/environments.md](./docs/environments.md) for details and validation rules.
 ## Testing
 To run the SDK unit tests locally:
 ```
