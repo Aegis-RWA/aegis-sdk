@@ -9,16 +9,15 @@ npm install @aegis/sdk
 ```
 
 ## Quickstart
-Initialize the client and query the compliance module.
-```TypeScipt
+Initialize the client with a typed environment preset and query the compliance module.
+```TypeScript
 import { AegisClient } from '@aegis/sdk';
-import { Networks, Keypair } from '@stellar/stellar-sdk';
+import { Keypair } from '@stellar/stellar-sdk';
 
 const adminKeypair = Keypair.fromSecret('S...');
 
 const aegis = new AegisClient({
-  rpcUrl: '[https://soroban-testnet.stellar.org:443](https://soroban-testnet.stellar.org:443)',
-  networkPassphrase: Networks.TESTNET,
+  environment: 'testnet', // or 'local'; see docs/environments.md
   contractId: 'C_YOUR_CONTRACT_ID',
   keypair: adminKeypair // Optional for read-only calls
 });
