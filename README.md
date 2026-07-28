@@ -42,8 +42,28 @@ const capability = await aegis.role.checkCapability('G_USER_PUBLIC_KEY', 'receiv
 console.log('Can receive transfer?', capability.isPermitted);
 ```
 
+## Contract Event Decoder
+Decode Soroban contract events into typed audit-trail models for dashboards and indexers.
+
+```typescript
+import { decodeContractEvent } from '@aegis/sdk';
+
+const event = decodeContractEvent({
+  topic: rpcEvent.topic,
+  value: rpcEvent.value,
+  txHash: rpcEvent.txHash,
+});
+
+if (event.kind === 'transfer') {
+  console.log(event.from, event.to, event.amount);
+}
+```
+
+See [Contract Event Decoder](./docs/contract-events.md) for supported topics, unknown fallback behaviour, and dashboard integration guidance.
+
 ## Testing
 To run the SDK unit tests locally:
+
 ```
 npm run test
 ```
@@ -55,11 +75,26 @@ runtime compatibility checks:
 npm run check
 ```
 
+### Pre-submit verification
+
+Run all checks (lint, format, build, test, compat) in a single command before
+submitting a PR:
+
+```bash
+npm run verify
+```
+
+See [Verification Command](docs/verification.md) for detailed usage and
+troubleshooting guidance.
+
 See [Runtime Compatibility](docs/runtime-compatibility.md) for the supported
 environments, what the automated probes cover, and integration guidance.
 
-If CI is failing on your PR, see the [Failing CI Response Guide](docs/ci-response-guide.md)
-for step-by-step troubleshooting.
+For step-by-step instructions on reproducing and fixing CI check failures, see the [CI Resolution Workflow](docs/ci-resolution-workflow.md).
 
 ## Contributing
-We welcome contributions! Please check our CONTRIBUTING.md for our branching strategy and code style guidelines.
+We welcome contributions! Please check our [CONTRIBUTING.md](CONTRIBUTING.md) for our branching strategy and code style guidelines.
+
+### Review Process
+PRs submitted to this repository are reviewed against our [Pull Request Reviewer Checklist](docs/reviewer-checklist.md), which covers code implementation, unit test coverage, CI build compatibility, API reference documentation, security/compliance, and acceptance criteria.
+
