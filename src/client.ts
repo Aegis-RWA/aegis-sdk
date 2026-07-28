@@ -50,4 +50,24 @@ export class AegisClient {
     }
     return this.keypair;
   }
+
+  /**
+   * Runs an SDK network operation behind the stable network-failure boundary.
+   */
+  public async runNetworkOperation<T>(
+    operation: () => Promise<T>
+  ): Promise<T> {
+    try {
+      return await operation();
+    } catch (error) {
+      throw classifyNetworkFailure(error);
+    }
+  }
+
+  /**
+   * Builds a serialisable, redacted diagnostic for support and dashboard UI.
+   */
+  public diagnoseNetworkFailure(error: unknown): NetworkFailureDiagnostic {
+    return buildNetworkFailureDiagnostic(error);
+  }
 }

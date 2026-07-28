@@ -20,21 +20,18 @@ constructor(client: AegisClient) {
     // Create the invocation for the read-only 'is_whitelisted' function
     const call = contract.call('is_whitelisted', nativeToScVal(address, { type: 'address' }));
 
-    try {
-      const result = await this.client.rpcServer.simulateTransaction({
+    const result = await this.client.runNetworkOperation(() =>
+      this.client.rpcServer.simulateTransaction({
         // Dummy transaction for simulation purposes
         transaction: call as any, // Cast required depending on SDK version wrapper
-      } as any);
+      } as any)
+    );
 
-      // rpc.Api.isSimulationSuccess acts as a type guard here
-      // Check for success AND ensure the result object actually exists
-      if (rpc.Api.isSimulationSuccess(result) && result.result) {
-         return parseSorobanResult(result.result.retval as any) as boolean;
-      }
-      return false;
-    } catch (error) {
-       console.error("RPC Simulation failed during checkWhitelist:", error);
-       throw error;
+    // rpc.Api.isSimulationSuccess acts as a type guard here
+    // Check for success AND ensure the result object actually exists
+    if (rpc.Api.isSimulationSuccess(result) && result.result) {
+       return parseSorobanResult(result.result.retval as any) as boolean;
     }
+    return false;
   }
 }
