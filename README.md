@@ -49,5 +49,15 @@ To run the SDK unit tests locally:
 npm run test
 ```
 
+Run the full release gate, including TypeScript compilation and browser/Node
+runtime compatibility checks:
+
+```bash
+npm run check
+```
+
+See [Runtime Compatibility](docs/runtime-compatibility.md) for the supported
+environments, what the automated probes cover, and integration guidance.
+
 ## Contributing
 We welcome contributions! Please check our CONTRIBUTING.md for our branching strategy and code style guidelines.
