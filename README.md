@@ -84,6 +84,8 @@ submitting a PR:
 npm run verify
 ```
 
+See [CI Pass Requirements](docs/ci-pass-requirements.md) for how failing checks affect review and what evidence reviewers expect.
+
 See [Verification Command](docs/verification.md) for detailed usage and
 troubleshooting guidance.
 
