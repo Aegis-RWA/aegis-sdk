@@ -124,7 +124,8 @@ reviewer notes section so reviewers do not attribute them to your PR.
 
 ### Partial completion
 
-If a PR intentionally addresses only some criteria, it must:
+If a PR intentionally addresses only some criteria, use the audit
+template's **Partial** or **Deferred** statuses. It must also:
 
 1. Use `Relates to #N` instead of `Closes #N`.
 2. List all criteria and mark incomplete rows as **Partial** or **Not started**.
