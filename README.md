@@ -84,7 +84,7 @@ submitting a PR:
 npm run verify
 ```
 
-See [Issue Approval Readiness Checklist](docs/issue-approval-readiness.md) for the pre-evaluation checklist covering implementation completeness, tests, CI, acceptance criteria, docs, and limitations.
+See [Test-First Contribution Guide](docs/test-first-contribution.md) for when behavior changes need happy-path, negative-path, and no-test justification coverage.
 
 See [Verification Command](docs/verification.md) for detailed usage and
 troubleshooting guidance.
@@ -99,4 +99,7 @@ We welcome contributions! Please check our [CONTRIBUTING.md](CONTRIBUTING.md) fo
 
 ### Review Process
 PRs submitted to this repository are reviewed against our [Pull Request Reviewer Checklist](docs/reviewer-checklist.md), which covers code implementation, unit test coverage, CI build compatibility, API reference documentation, security/compliance, and acceptance criteria.
+
+### Acceptance Criteria Traceability
+Every PR **must** include an [acceptance criteria traceability table](docs/acceptance-criteria-traceability.md) that maps SDK modules, tests, docs, and behaviour verification to each acceptance criterion from the linked issue. This makes evaluation straightforward for maintainers and GrantFox reviewers.
 
