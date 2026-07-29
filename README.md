@@ -84,6 +84,8 @@ submitting a PR:
 npm run verify
 ```
 
+See [Test-First Contribution Guide](docs/test-first-contribution.md) for when behavior changes need happy-path, negative-path, and no-test justification coverage.
+
 See [Verification Command](docs/verification.md) for detailed usage and
 troubleshooting guidance.
 
