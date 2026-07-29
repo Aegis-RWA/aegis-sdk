@@ -78,12 +78,13 @@ npm run check
 
 ### 6. Acceptance Criteria Coverage
 
-Copy the acceptance criteria from the linked issue and check off each item
-that this PR satisfies.
+Copy one row per criterion from the linked issue and complete the audit below.
+Use the allowed statuses and incomplete-criteria guidance in the
+[Acceptance Criteria Audit](../docs/acceptance-criteria-audit.md).
 
-- [ ] <!-- Criterion 1 from the issue -->
-- [ ] <!-- Criterion 2 from the issue -->
-- [ ] <!-- Add more as needed -->
+| Acceptance criterion | Implementation evidence | Test evidence | Documentation impact | Status |
+|---|---|---|---|---|
+| <!-- Copy the criterion verbatim. --> | <!-- File, symbol, or diff evidence. --> | <!-- Test and command, or why not applicable. --> | <!-- Updated doc, or `None` with a reason. --> | <!-- Complete, Partial, Not started, or Not applicable --> |
 
 ---
 
