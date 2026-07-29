@@ -35,6 +35,14 @@ template for criterion-level evidence and incomplete criteria handling.
 PRs that do not complete the checklist may be returned for revision before
 review begins.
 
+## Payment-Period Conduct
+
+During and after GrantFox evaluation periods, contributors are expected to keep community channels free of repeated payment inquiries. Before raising any concern, self-review your contribution: confirm CI is green, all acceptance criteria are met, and you have checked the GrantFox platform directly for your evaluation status.
+
+See [docs/payment-period-conduct.md](docs/payment-period-conduct.md) for the full conduct guidelines, self-review checklist, and escalation process.
+
+---
+
 ## Updating API Reference Documentation
 
 When you add or change a public method on `ComplianceModule`, `AssetModule`, `InvestorModule`, `EventsModule`, or an exported utility/type, update `docs/api-reference.md` (and `docs/investor-portfolio.md` if the investor read model changes; `docs/contract-events.md` if event decoding changes). Review checklist:
