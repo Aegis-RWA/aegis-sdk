@@ -61,6 +61,11 @@ See [Role-Aware Client Factory](./docs/role-aware-client-factory.md) for the
 full capability matrix, `compliance-operator` usage, error handling, and
 security notes.
 
+Before integrating the SDK with a contract deployment or dashboard, review
+the [Public API Compatibility Matrix](./docs/public-api-compatibility.md) for
+export stability, contract dependencies, known consumer paths, current drift,
+and breaking-change rules.
+
 For direct `AegisClient` construction (advanced / custom setups):
 
 ```typescript
