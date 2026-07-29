@@ -84,6 +84,8 @@ submitting a PR:
 npm run verify
 ```
 
+See [Contributor Test Matrix](docs/contributor-test-matrix.md) for expected unit, fixture, smoke, and integration coverage by SDK module.
+
 See [Verification Command](docs/verification.md) for detailed usage and
 troubleshooting guidance.
 
