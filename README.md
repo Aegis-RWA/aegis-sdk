@@ -84,6 +84,8 @@ submitting a PR:
 npm run verify
 ```
 
+See [Issue Approval Readiness Checklist](docs/issue-approval-readiness.md) for the pre-evaluation checklist covering implementation completeness, tests, CI, acceptance criteria, docs, and limitations.
+
 See [Verification Command](docs/verification.md) for detailed usage and
 troubleshooting guidance.
 
