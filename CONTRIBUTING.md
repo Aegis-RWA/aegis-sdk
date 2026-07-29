@@ -6,7 +6,7 @@ We welcome open-source contributions! As middleware, this SDK is critical for th
 1. **Fork & Clone:** Fork the repo and clone it locally.
 2. **Install Dependencies:** Run `npm install`.
 3. **Branching:** Use `feat/`, `fix/`, or `chore/` prefixes.
-4. **Testing:** You MUST write unit tests in `tests/` for any new methods added. PRs without test coverage will be rejected. For predictable SDK responses without live RPC, use the mock client from `@aegis/sdk/testing` (see `docs/testing.md`).
+4. **Testing:** You MUST write unit tests in `tests/` for any new methods added. PRs without test coverage will be rejected. For predictable SDK responses without live RPC, use the mock client from `@aegis/sdk/testing` (see `docs/testing.md`). Use the [Contributor Test Matrix](docs/contributor-test-matrix.md) to choose unit, fixture, smoke, and integration coverage for each SDK module.
 5. **Formatting:** Ensure `npm run lint` and `npm run format` pass before opening a PR.
 6. **CI Verification:** Run `npm run check` locally to verify that build, unit tests, and runtime compatibility checks pass. PRs with failing GitHub Actions CI checks will not be reviewed or merged until all status checks are green (see [CI Resolution Workflow](docs/ci-resolution-workflow.md)).
 
