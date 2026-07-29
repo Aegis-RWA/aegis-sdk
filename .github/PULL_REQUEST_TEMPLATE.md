@@ -76,20 +76,17 @@ npm run check
 
 </details>
 
-### 6. Acceptance Criteria Coverage
+### 6. Acceptance Criteria Coverage — Traceability Table
 
-Use the traceability table to map each acceptance criterion from the linked
-issue to implementation evidence and tests. See
-[`docs/acceptance-criteria-traceability.md`](../docs/acceptance-criteria-traceability.md)
-for column definitions, a worked example, and guidance on marking partial or
-deferred criteria.
+Copy the acceptance criteria from the linked issue into the table below and
+map each to SDK modules, tests, docs, and behaviour verification.
+See [`docs/acceptance-criteria-traceability.md`](../docs/acceptance-criteria-traceability.md) for the table format, SDK module map, test map, and documentation map.
 
-| # | Acceptance Criterion | Status | Implementation Evidence | Tests |
-|---|---|---|---|---|
-| 1 | <!-- criterion text --> | ✅ Done / ⚠️ Partial / ❌ Not done | <!-- file, function, or section --> | <!-- test file + test name, or "N/A — docs only" --> |
-| 2 | <!-- criterion text --> | ✅ Done / ⚠️ Partial / ❌ Not done | <!-- file, function, or section --> | <!-- test file + test name, or "N/A — docs only" --> |
-
-<!-- Add one row per acceptance criterion from the issue. -->
+| # | Acceptance Criterion | SDK Module(s) | Test(s) | Doc(s) | Behaviour Verification |
+|---|---|---|---|---|---|
+| 1 | <!-- Criterion 1 from the issue --> | <!-- e.g. `src/role.ts` --> | <!-- e.g. `tests/role.test.ts` --> | <!-- e.g. `docs/api-reference.md` --> | <!-- e.g. `expect(result).toBe(true)` --> |
+| 2 | <!-- Criterion 2 from the issue --> | <!-- --> | <!-- --> | <!-- --> | <!-- --> |
+| 3 | <!-- Add more as needed --> | <!-- --> | <!-- --> | <!-- --> | <!-- --> |
 
 ---
 

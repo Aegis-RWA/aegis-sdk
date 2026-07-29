@@ -1,112 +1,160 @@
-# Acceptance Criteria Traceability
+# Acceptance Criteria Traceability Table
 
-This document defines the completion table format used in Aegis SDK pull requests to map each acceptance criterion from a linked issue to concrete implementation evidence and tests.
-
-Filling out this table is part of the [PR Evidence Checklist](pr-evidence-checklist.md) (Section 6). It helps contributors self-evaluate before submission and helps reviewers verify completeness before the GrantFox evaluation period.
+## Status
+**Applies to:** Aegis SDK (`@aegis/sdk`)
+**Last updated:** 2026-07-29
 
 ---
 
-## Why a Table Instead of a Checklist
+## Purpose
 
-A checkbox alone — `[x] Criterion met` — tells a reviewer nothing about *how* it was met. The completion table requires a brief evidence entry and a test reference for each criterion, making gaps immediately visible. A row with empty evidence is a signal that the work is incomplete or undocumented.
+A traceability table maps every acceptance criterion from an issue to concrete deliverables in the pull request — SDK modules, tests, documentation, and verified behaviours. This makes evaluation straightforward for maintainers and GrantFox reviewers.
 
 ---
 
 ## Table Format
 
-Copy this template into the PR description's Section 6 and fill in one row per acceptance criterion from the linked issue.
+Every PR addressing a tracked issue **should** include a traceability table in the PR description (or in a linked document) with the following columns:
 
-```markdown
-| # | Acceptance Criterion | Status | Implementation Evidence | Tests |
-|---|---|---|---|---|
-| 1 | <!-- criterion text --> | ✅ Done / ⚠️ Partial / ❌ Not done | <!-- file path, function name, or brief description --> | <!-- test file and test name, or "N/A — docs only" --> |
-| 2 | <!-- criterion text --> | ✅ Done / ⚠️ Partial / ❌ Not done | <!-- file path, function name, or brief description --> | <!-- test file and test name, or "N/A — docs only" --> |
-```
+| # | Acceptance Criterion | SDK Module(s) | Test(s) | Doc(s) | Behaviour Verification |
+|---|---|---|---|---|---|
+| 1 | _Criterion from issue_ | `src/module.ts` | `tests/module.test.ts` | `docs/module.md` | How the behaviour is observed |
 
-### Column definitions
+### Column Guidance
 
-| Column | What to write |
+| Column | Content |
 |---|---|
-| **#** | Sequential number matching the issue's criterion list. |
-| **Acceptance Criterion** | Copy the criterion text verbatim from the issue. Do not paraphrase. |
-| **Status** | `✅ Done` — fully addressed. `⚠️ Partial` — partially addressed; explain in Reviewer Notes. `❌ Not done` — not addressed in this PR; link a follow-up issue. |
-| **Implementation Evidence** | The specific file(s), function(s), or section(s) that satisfy the criterion. A file path and line reference is ideal. For documentation changes, name the document and section. |
-| **Tests** | The test file and test name(s) covering this criterion. For documentation-only or config-only criteria, write `N/A — docs only` or `N/A — config only` with a brief justification. |
+| **#** | Criterion number from the issue. |
+| **Acceptance Criterion** | Verbatim text of the criterion as written in the issue. |
+| **SDK Module(s)** | File path(s) to the source module(s) that implement the criterion. Use code-relative paths (e.g. `src/compliance.ts`). |
+| **Test(s)** | File path(s) to the test(s) that cover the criterion. Use code-relative paths (e.g. `tests/client.test.ts`). |
+| **Doc(s)** | File path(s) to the documentation that describes or references the criterion (e.g. `docs/api-reference.md`). |
+| **Behaviour Verification** | A short statement describing how a reviewer can confirm the behaviour — a test assertion, a console log, a public API return type, etc. |
 
 ---
 
-## Worked Example
+## SDK Module Map
 
-**Issue:** Add a `getRedemptionStatus` method to `InvestorModule`.
+Below is the complete map of every public SDK module. Reference this when completing the "SDK Module(s)" column of the traceability table.
 
-**Acceptance criteria from the issue:**
-1. Method returns the current redemption status for a given investor address.
-2. Method returns `null` when no redemption request is on record.
-3. Method throws `PortfolioError` on RPC failure.
-4. API reference documentation is updated.
-
-**Completed table:**
-
-| # | Acceptance Criterion | Status | Implementation Evidence | Tests |
-|---|---|---|---|---|
-| 1 | Method returns the current redemption status for a given investor address | ✅ Done | `src/investor/portfolio.ts` — `getRedemptionStatus()`, lines 142–158 | `tests/investor.test.ts` — `"returns status when a redemption request exists"` |
-| 2 | Method returns `null` when no redemption request is on record | ✅ Done | `src/investor/portfolio.ts` — `getRedemptionStatus()` null branch, line 151 | `tests/investor.test.ts` — `"returns null when no redemption request exists"` |
-| 3 | Method throws `PortfolioError` on RPC failure | ✅ Done | `src/investor/portfolio.ts` — catch block, lines 154–157 | `tests/investor.test.ts` — `"throws PortfolioError on RPC failure"` |
-| 4 | API reference documentation is updated | ✅ Done | `docs/api-reference.md` — new `getRedemptionStatus` section | N/A — docs only |
-
----
-
-## Handling Incomplete Criteria
-
-Not every PR needs to close every criterion. The table format is designed to make partial completion explicit rather than hidden.
-
-### Partial completion (`⚠️ Partial`)
-
-Use `⚠️ Partial` when the criterion is addressed in principle but something is missing — for example, a method is implemented but only the happy-path test exists.
-
-- Mark the row `⚠️ Partial`.
-- Add a brief note in the **Implementation Evidence** or **Tests** column explaining what is missing.
-- Add a follow-up item in the PR's Reviewer Notes section.
-- Use `Relates to #N` instead of `Closes #N` in the PR description so the issue stays open.
-
-**Example:**
-
-| # | Acceptance Criterion | Status | Implementation Evidence | Tests |
-|---|---|---|---|---|
-| 3 | Method throws `PortfolioError` on RPC failure | ⚠️ Partial | `src/investor/portfolio.ts` — catch block present | Happy-path test only; error-path test missing — tracked in #87 |
-
-### Not done (`❌ Not done`)
-
-Use `❌ Not done` when a criterion is entirely out of scope for this PR.
-
-- Mark the row `❌ Not done`.
-- Leave Implementation Evidence and Tests blank or write `Deferred`.
-- Link a follow-up issue in the Reviewer Notes section.
-- Use `Relates to #N` in the PR description.
-
-**Example:**
-
-| # | Acceptance Criterion | Status | Implementation Evidence | Tests |
-|---|---|---|---|---|
-| 4 | API reference documentation is updated | ❌ Not done | Deferred | Deferred — tracked in #88 |
-
-> **Note for GrantFox evaluation:** Criteria marked `⚠️ Partial` or `❌ Not done` will be evaluated accordingly. A PR that honestly marks two criteria as incomplete is evaluated more favourably than one that checks everything off without delivering it.
+| Module | File | Public Exports | Description |
+|---|---|---|---|
+| Client | `src/client.ts` | `AegisClient` | Top-level SDK client; initializes RPC, configures modules, provides `runNetworkOperation()` |
+| Compliance | `src/compliance.ts` | `ComplianceModule` | Queries the Aegis Soroban contract for KYC/whitelist status |
+| Asset | `src/asset.ts` | `AssetModule` | Submits mint and transfer transactions to the Soroban contract |
+| Role Discovery | `src/role.ts` | `RoleModule` | Client-side role classification and capability gating |
+| Admin Receipts | `src/admin/receipts.ts` | `normalizeAdminActionStatus`, `buildAdminTransactionExplorerUrl`, `buildAdminActionReceipt` | Builds serializable admin action receipts |
+| Environment Config | `src/config/environments.ts` | `AEGIS_ENVIRONMENTS`, `getEnvironmentPreset` | Environment presets (testnet, local, mainnet) |
+| Config Validation | `src/config/validate.ts` | `resolveClientConfig`, `AegisClientConfig` | Validates and resolves client configuration |
+| Event Decoder | `src/events/decoder.ts` | `decodeContractEvent`, `decodeContractEvents` | Decodes Soroban contract events into typed models |
+| Events Module | `src/events/module.ts` | `EventsModule` | Wraps RPC `getEvents` with fetch + decode |
+| Event Topics | `src/events/topics.ts` | `AEGIS_EVENT_TOPICS`, `normalizeEventTopicName`, `isKnownAegisEventTopic` | Canonical event topic constants and utilities |
+| Investor Portfolio | `src/investor/portfolio.ts` | `InvestorModule` | Queries investor portfolio read model (balances, KYC, metadata) |
+| Network Failures | `src/network/failures.ts` | `classifyNetworkFailure` | Classifies RPC/network errors into `NetworkFailure` |
+| Network Diagnostics | `src/diagnostics/network.ts` | `buildNetworkFailureDiagnostic` | Converts failures into serializable diagnostics |
+| ScVal Decoding | `src/soroban/scval.ts` | `decodeScVal`, `decodeEventName`, `normalizeAddress`, `normalizeAmount`, `readPayloadField` | Low-level Soroban XDR ScVal utilities |
+| XDR Parser | `src/utils/xdr-parser.ts` | `parseSorobanResult` | Decodes base64 Soroban XDR results |
+| Mock Client (Testing) | `src/testing/mock-client.ts` | `MockAegisClient`, `createMockAegisClient` | In-memory mock client for unit tests |
+| Test Fixtures | `src/testing/fixtures.ts` | `createMockFixtures`, `MOCK_CONTRACT_ID`, `DEFAULT_MOCK_ASSET_METADATA` | Deterministic test fixtures |
 
 ---
 
-## Quick Reference
+## Test Map
 
-| Status | Meaning | PR closing keyword |
-|---|---|---|
-| ✅ Done | Criterion fully addressed with evidence and tests | `Closes #N` (if all criteria are Done) |
-| ⚠️ Partial | Criterion partially addressed; gaps documented | `Relates to #N` |
-| ❌ Not done | Criterion deferred to a follow-up PR | `Relates to #N` |
+Reference this when completing the "Test(s)" column.
+
+| Test File | Covers |
+|---|---|
+| `tests/client.test.ts` | Client configuration, module instantiation, signer requirements |
+| `tests/config.test.ts` | Environment presets, config validation, error cases |
+| `tests/role.test.ts` | Role discovery, capability checks, capability matrix |
+| `tests/investor.test.ts` | Portfolio fetching, balance calculations, status mapping |
+| `tests/admin-receipts.test.ts` | Action receipt building, status normalization, explorer URLs |
+| `tests/events-decoder.test.ts` | Event decoding, strict mode, unknown event fallback |
+| `tests/events-module.test.ts` | RPC event fetching, cursor pagination |
+| `tests/network-failures.test.ts` | Error classification, retryable detection |
+| `tests/mock-client.test.ts` | Mock client behaviour, whitelist/balance control |
+| `tests/mock-client-examples.test.ts` | End-to-end integration examples with mock client |
 
 ---
 
-## Related Documents
+## Documentation Map
 
-- [PR Evidence Checklist](pr-evidence-checklist.md) — full checklist requirements for every PR submission.
-- [Self-Review Template](self-review-template.md) — pre-submission checklist to complete before opening a PR.
-- [Contributor Evaluation Policy](contributor-evaluation-policy.md) — how GrantFox evaluates contributions and what partial completion means for payment.
-- [Contribution Quality Examples](low-effort-pr-examples.md) — before/after examples of acceptable and unacceptable contributions.
+Reference this when completing the "Doc(s)" column.
+
+| Document | Content |
+|---|---|
+| `docs/api-reference.md` | Full API reference for all public modules |
+| `docs/testing.md` | Mock client setup and testing patterns |
+| `docs/contract-events.md` | Event decoder usage and supported topics |
+| `docs/role-discovery.md` | Role discovery and capability gating |
+| `docs/investor-portfolio.md` | Investor portfolio read model |
+| `docs/admin-action-receipts.md` | Admin action receipt types and building |
+| `docs/environments.md` | Environment presets and configuration |
+| `docs/network-failures.md` | Network failure classification and diagnostics |
+| `docs/pr-evidence-checklist.md` | PR evidence checklist (this is merged into) |
+| `docs/reviewer-checklist.md` | Reviewer checklist for PR evaluation |
+| `docs/verification.md` | Verification commands and troubleshooting |
+| `docs/runtime-compatibility.md` | Cross-environment compatibility matrix |
+| `docs/ci-resolution-workflow.md` | CI failure reproduction and resolution |
+| `docs/release-checklist.md` | Release process and versioning steps |
+| `docs/migration-guide.md` | Breaking changes and upgrade paths |
+| `docs/contributor-evaluation-policy.md` | Contributor evaluation guidelines |
+| `docs/self-review-template.md` | Self-review checklist for contributors |
+| `docs/low-effort-pr-examples.md` | Examples of well-structured PRs |
+
+---
+
+## Example: Implementing a Feature Issue
+
+Suppose an issue requires adding a **new capability check** to the Role Discovery module:
+
+| # | Acceptance Criterion | SDK Module(s) | Test(s) | Doc(s) | Behaviour Verification |
+|---|---|---|---|---|---|
+| 1 | `RoleModule.checkCapability()` returns `isPermitted: boolean` | `src/role.ts` | `tests/role.test.ts` | `docs/role-discovery.md`, `docs/api-reference.md` | `expect(result.isPermitted).toBe(true)` |
+| 2 | Capability matrix includes all 4 capabilities | `src/role.ts`, `src/types/role.ts` | `tests/role.test.ts` | `docs/role-discovery.md` | `matrix.capabilities` array has length 4 |
+| 3 | Invalid address throws `RoleError` | `src/role.ts`, `src/errors/role.ts` | `tests/role.test.ts` | `docs/api-reference.md` | Test expects `RoleError` with code `invalid_address` |
+| 4 | Mock client supports capability checks | `src/testing/mock-client.ts` | `tests/mock-client.test.ts` | `docs/testing.md` | `mockClient.role.checkCapability()` resolves |
+
+---
+
+## Example: Documentation-only Issue
+
+For a documentation issue like this one (#88), the table maps documents and templates:
+
+| # | Acceptance Criterion | SDK Module(s) | Test(s) | Doc(s) | Behaviour Verification |
+|---|---|---|---|---|---|
+| 1 | Traceability table is documented | — | — | `docs/acceptance-criteria-traceability.md` | Document exists and defines the table format |
+| 2 | SDK modules are mapped | — | — | `docs/acceptance-criteria-traceability.md` | Module map table is complete and accurate |
+| 3 | Tests are mapped | — | — | `docs/acceptance-criteria-traceability.md` | Test map table lists all test files and their coverage |
+| 4 | Docs are mapped | — | — | `docs/acceptance-criteria-traceability.md` | Documentation map table lists all doc files and content |
+| 5 | PR template references table | — | — | `.github/PULL_REQUEST_TEMPLATE.md` | Section 6 references the traceability table |
+| 6 | README links to docs | — | — | `README.md` | README contains a link to the traceability document |
+
+---
+
+## Usage in the PR Template
+
+When opening a PR, follow these steps:
+
+1. Copy the traceability table template from this document.
+2. Fill in each row with the relevant SDK module(s), test(s), doc(s), and behavioural verification for each criterion in the linked issue.
+3. Paste the completed table into Section 6 of the PR template.
+4. Check off each criterion in the checklist.
+
+The PR template's Section 6 now reads:
+
+> ### 6. Acceptance Criteria Coverage — Traceability Table
+>
+> Copy the acceptance criteria from the linked issue into the table below and
+> map each to SDK modules, tests, docs, and behaviour verification.
+> See [`docs/acceptance-criteria-traceability.md`](./acceptance-criteria-traceability.md) for the table format, SDK module map, test map, and documentation map.
+
+---
+
+## Related Documentation
+
+- [Pull Request Template](../.github/PULL_REQUEST_TEMPLATE.md) — PR description structure with traceability table section.
+- [PR Evidence Checklist](./pr-evidence-checklist.md) — Detailed guidance on each checklist item.
+- [Reviewer Checklist](./reviewer-checklist.md) — Criteria reviewers use to evaluate PRs.
+- [Contributing Guide](../CONTRIBUTING.md) — Development workflow and code style.

@@ -99,11 +99,5 @@ We welcome contributions! Please check our [CONTRIBUTING.md](CONTRIBUTING.md) fo
 PRs submitted to this repository are reviewed against our [Pull Request Reviewer Checklist](docs/reviewer-checklist.md), which covers code implementation, unit test coverage, CI build compatibility, API reference documentation, security/compliance, and acceptance criteria.
 
 ### Acceptance Criteria Traceability
-Every PR must include a completion table mapping each acceptance criterion from the linked issue to implementation evidence and tests. See [Acceptance Criteria Traceability](docs/acceptance-criteria-traceability.md) for the table format, a worked example, and guidance on handling partial or deferred criteria.
-
-### Contribution Quality Examples
-See [Contribution Quality Examples](docs/low-effort-pr-examples.md) for practical before/after examples of low-effort, partial, under-tested, failing-CI, and acceptable contributions — and what separates them.
-
-### Payment-Period Conduct
-Compensation decisions are made through GrantFox on a defined schedule after each contribution period. Please review the [Payment-Period Conduct guidelines](docs/payment-period-conduct.md) before raising any payment concern — it covers self-review expectations, communication rules, and the GrantFox evaluation process.
+Every PR **must** include an [acceptance criteria traceability table](docs/acceptance-criteria-traceability.md) that maps SDK modules, tests, docs, and behaviour verification to each acceptance criterion from the linked issue. This makes evaluation straightforward for maintainers and GrantFox reviewers.
 
