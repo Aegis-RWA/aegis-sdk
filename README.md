@@ -98,6 +98,6 @@ We welcome contributions! Please check our [CONTRIBUTING.md](CONTRIBUTING.md) fo
 ### Review Process
 PRs submitted to this repository are reviewed against our [Pull Request Reviewer Checklist](docs/reviewer-checklist.md), which covers code implementation, unit test coverage, CI build compatibility, API reference documentation, security/compliance, and acceptance criteria.
 
-### Payment-Period Conduct
-Compensation decisions are made through GrantFox on a defined schedule after each contribution period. Please review the [Payment-Period Conduct guidelines](docs/payment-period-conduct.md) before raising any payment concern — it covers self-review expectations, communication rules, and the GrantFox evaluation process.
+### Acceptance Criteria Traceability
+Every PR **must** include an [acceptance criteria traceability table](docs/acceptance-criteria-traceability.md) that maps SDK modules, tests, docs, and behaviour verification to each acceptance criterion from the linked issue. This makes evaluation straightforward for maintainers and GrantFox reviewers.
 
