@@ -10,16 +10,13 @@ npm install @aegis/sdk
 
 ## Quickstart
 Initialize the client with a typed environment preset and query the compliance module.
+This is a **read-only** call — no signing keypair is needed or used here.
 ```TypeScript
 import { AegisClient } from '@aegis/sdk';
-import { Keypair } from '@stellar/stellar-sdk';
-
-const adminKeypair = Keypair.fromSecret('S...');
 
 const aegis = new AegisClient({
   environment: 'testnet', // or 'local'; see docs/environments.md
   contractId: 'C_YOUR_CONTRACT_ID',
-  keypair: adminKeypair // Optional for read-only calls
 });
 
 async function main() {
@@ -30,6 +27,38 @@ async function main() {
 
 main();
 ```
+
+## Privileged Operations (Admin / Issuer)
+⚠️ **`mint` and `transfer` are privileged, state-changing operations.** They require an
+`AegisClient` configured with a signing `keypair`, and that keypair's authority is
+whatever the deployed contract grants it (typically issuer/admin authority for `mint`).
+Never hardcode a real secret key in source code. Load it from an environment variable
+or secret manager that is excluded from version control — the string below is a
+placeholder, not something to paste a real secret into.
+```TypeScript
+import { AegisClient } from '@aegis/sdk';
+import { Keypair } from '@stellar/stellar-sdk';
+
+// NEVER hardcode a real secret key. Load it from a secret manager or an
+// environment variable that is git-ignored (e.g. via a local .env file).
+const issuerKeypair = Keypair.fromSecret(process.env.AEGIS_ISSUER_SECRET!);
+
+const aegis = new AegisClient({
+  environment: 'testnet',
+  contractId: 'C_YOUR_CONTRACT_ID',
+  keypair: issuerKeypair, // required for mint/transfer; omit for read-only usage
+});
+
+async function mintExample() {
+  const txHash = await aegis.asset.mint('G_RECIPIENT_PUBLIC_KEY', 1000);
+  console.log('Mint submitted, tx hash:', txHash);
+}
+
+mintExample();
+```
+See [API Reference: `AssetModule`](docs/api-reference.md#assetmodule) for the open
+caveats (sequence-number placeholder, no pre-submission simulation) before using this
+against a real account.
 ## Role Discovery & Capability Checks
 Check what an address is classified as, and what it can currently attempt through the SDK.
 This is a client-side convenience for UI gating, not on-chain authorization — see the
