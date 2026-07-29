@@ -119,8 +119,8 @@ reviewer notes section so reviewers do not attribute them to your PR.
 | Requirement | Every acceptance criterion from the linked issue must be addressed. |
 |---|---|
 | **Why** | PRs that miss acceptance criteria create incomplete issues that are hard to track and re-open. |
-| **How to satisfy** | Fill in the [Acceptance Criteria Audit Template](./acceptance-criteria-audit-template.md) in the PR template's Section 6 -- one row per criterion, with evidence and a status. |
-| **Acceptable evidence** | A completed audit table in the PR where each criterion maps to a concrete deliverable in the diff, not just a checkmark. |
+| **How to satisfy** | Copy each acceptance criterion from the issue into the audit table in the PR template's Section 6. For every row, provide implementation, test, and documentation evidence and select an allowed status. See the [Acceptance Criteria Audit](acceptance-criteria-audit.md). |
+| **Acceptable evidence** | A completed audit table in the PR where every criterion maps to concrete evidence and a clear status. |
 
 ### Partial completion
 
@@ -128,8 +128,8 @@ If a PR intentionally addresses only some criteria, use the audit
 template's **Partial** or **Deferred** statuses. It must also:
 
 1. Use `Relates to #N` instead of `Closes #N`.
-2. State what remains in the row's evidence cell.
-3. Link any follow-up issues, or note that one should be created.
+2. List all criteria and mark incomplete rows as **Partial** or **Not started**.
+3. Explain the remaining work and link to any follow-up issues.
 
 ---
 
@@ -142,7 +142,7 @@ template's **Partial** or **Deferred** statuses. It must also:
 | 3 | Tests | New/updated tests or justification |
 | 4 | Commands run | Pasted terminal output |
 | 5 | CI status | Green GitHub Actions checks |
-| 6 | Acceptance criteria | Checked-off list from the issue |
+| 6 | Acceptance criteria | Audit table with evidence and status for every criterion |
 
 ---
 
@@ -162,4 +162,6 @@ template's **Partial** or **Deferred** statuses. It must also:
 - [Testing Utilities](./testing.md) — mock client setup and fake data policy.
 - [Release and Migration Checklist](./release-checklist.md) — release process
   and versioning.
+- [Acceptance Criteria Audit](./acceptance-criteria-audit.md) — criterion-level
+  implementation, test, documentation, and status evidence.
 - [API Reference](./api-reference.md) — documentation update guidelines.
