@@ -92,6 +92,8 @@ environments, what the automated probes cover, and integration guidance.
 
 For step-by-step instructions on reproducing and fixing CI check failures, see the [CI Resolution Workflow](docs/ci-resolution-workflow.md).
 
+All pull requests must pass CI before review or merge. See the [CI Pass Requirement](docs/ci-pass-requirement.md) for the full policy.
+
 ## Contributing
 We welcome contributions! Please check our [CONTRIBUTING.md](CONTRIBUTING.md) for our branching strategy and code style guidelines.
 
