@@ -119,16 +119,17 @@ reviewer notes section so reviewers do not attribute them to your PR.
 | Requirement | Every acceptance criterion from the linked issue must be addressed. |
 |---|---|
 | **Why** | PRs that miss acceptance criteria create incomplete issues that are hard to track and re-open. |
-| **How to satisfy** | Copy each acceptance criterion from the issue into the PR template's Section 6. Check off each item and briefly note how it is satisfied (a file path, a test name, or a sentence). |
-| **Acceptable evidence** | A checked-off list in the PR where each criterion maps to a concrete deliverable in the diff. |
+| **How to satisfy** | Fill in the [Acceptance Criteria Audit Template](./acceptance-criteria-audit-template.md) in the PR template's Section 6 -- one row per criterion, with evidence and a status. |
+| **Acceptable evidence** | A completed audit table in the PR where each criterion maps to a concrete deliverable in the diff, not just a checkmark. |
 
 ### Partial completion
 
-If a PR intentionally addresses only some criteria, it must:
+If a PR intentionally addresses only some criteria, use the audit
+template's **Partial** or **Deferred** statuses. It must also:
 
 1. Use `Relates to #N` instead of `Closes #N`.
-2. List all criteria and mark only the completed ones.
-3. Note which criteria remain and link to any follow-up issues.
+2. State what remains in the row's evidence cell.
+3. Link any follow-up issues, or note that one should be created.
 
 ---
 
