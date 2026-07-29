@@ -98,3 +98,6 @@ We welcome contributions! Please check our [CONTRIBUTING.md](CONTRIBUTING.md) fo
 ### Review Process
 PRs submitted to this repository are reviewed against our [Pull Request Reviewer Checklist](docs/reviewer-checklist.md), which covers code implementation, unit test coverage, CI build compatibility, API reference documentation, security/compliance, and acceptance criteria.
 
+### Payment-Period Communication
+Contributing under a compensated program? A merged PR does not by itself mean payment is approved. Please read the [Payment-Period Communication Policy](docs/payment-period-communication-policy.md) before raising a payment concern in any community channel.
+

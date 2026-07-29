@@ -31,6 +31,17 @@ For detailed guidance on each item, see
 PRs that do not complete the checklist may be returned for revision before
 review begins.
 
+## Payment-Period Communication
+
+If you are contributing under a compensated program (e.g. GrantFox), a
+merged PR does not by itself mean payment has been approved — see the
+[Contributor Evaluation Policy](docs/contributor-evaluation-policy.md).
+Before raising a payment concern, self-review your contribution against the
+[Meaningful Change Threshold Guide](docs/meaningful-change-threshold.md) and
+the [PR Evidence Checklist](docs/pr-evidence-checklist.md). Full expectations
+for payment-period conduct, including what not to do, are documented in the
+[Payment-Period Communication Policy](docs/payment-period-communication-policy.md).
+
 ## Updating API Reference Documentation
 
 When you add or change a public method on `ComplianceModule`, `AssetModule`, `InvestorModule`, `EventsModule`, or an exported utility/type, update `docs/api-reference.md` (and `docs/investor-portfolio.md` if the investor read model changes; `docs/contract-events.md` if event decoding changes). Review checklist:
