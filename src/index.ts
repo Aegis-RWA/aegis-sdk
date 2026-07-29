@@ -1,4 +1,21 @@
 export { AegisClient, AegisClientConfig } from './client';
+export {
+  createReadOnlyClient,
+  createInvestorClient,
+  createComplianceOperatorClient,
+  createIssuerClient,
+  createAdminClient,
+  getRoleCapabilities,
+} from './client-factory';
+export type {
+  AegisReadOnlyClient,
+  AegisInvestorClient,
+  AegisComplianceOperatorClient,
+  AegisIssuerClient,
+  AegisAdminClient,
+} from './client-factory';
+export * from './types/client-factory';
+export * from './errors/client-factory';
 export { ComplianceModule } from './compliance';
 export { AssetModule } from './asset';
 export { InvestorModule } from './investor/portfolio';
