@@ -92,4 +92,6 @@ See [`docs/acceptance-criteria-traceability.md`](../docs/acceptance-criteria-tra
 
 ## Reviewer Notes
 
+> Reviewers: please verify this PR against the [Pull Request Reviewer Checklist](../docs/reviewer-checklist.md) before approving.
+
 <!-- Optional: call out areas that need careful review, known trade-offs, or follow-up work. -->
