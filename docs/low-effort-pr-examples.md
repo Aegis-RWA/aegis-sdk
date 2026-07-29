@@ -86,6 +86,37 @@ async discoverRole(address: string): Promise<RoleResult> {
   ```
   Ensure TypeScript compiles clean (`npm run build`), unit tests pass (`npm test`), and browser/Node runtime compatibility checks succeed (`npm run test:compat`).
 
+```typescript
+// BAD: Type error that breaks compilation — PR opened without running npm run build
+async getPortfolioValue(address: string) {
+  const holdings = await this.investor.getPortfolio(address);
+  // TypeScript error: 'totalValue' does not exist on type 'PortfolioHolding[]'
+  return holdings.totalValue;
+}
+
+// BAD: Test referencing a method that doesn't exist — causes Jest to fail in CI
+test('getPortfolioValue returns a number', async () => {
+  // TypeError at runtime: aegis.investor.getPortfolioValue is not a function
+  const value = await aegis.investor.getPortfolioValue('G_USER');
+  expect(value).toBeGreaterThan(0);
+});
+
+// GOOD: Compiles cleanly and tests pass — verified locally with npm run check
+async getPortfolioValue(address: string): Promise<number> {
+  const holdings = await this.investor.getPortfolio(address);
+  return holdings.reduce((sum, h) => sum + h.value, 0);
+}
+
+test('getPortfolioValue sums holding values', async () => {
+  mockClient.setPortfolio('G_USER', [
+    { assetCode: 'USDC', value: 500 },
+    { assetCode: 'USDT', value: 300 },
+  ]);
+  const value = await aegis.investor.getPortfolioValue('G_USER');
+  expect(value).toBe(800);
+});
+```
+
 ---
 
 ### 5. Incomplete Documentation & Missing API Updates
@@ -95,6 +126,90 @@ async discoverRole(address: string): Promise<RoleResult> {
 * **Better Alternative:** Follow the update checklist in [`CONTRIBUTING.md`](../CONTRIBUTING.md#updating-api-reference-documentation):
   - Document all parameters, return types, fallback values, and thrown error classes.
   - Update usage examples using sanitised placeholder keys (`G...`, `C...`, `S...`).
+
+```typescript
+// BAD: New method added with no docs/api-reference.md entry and no JSDoc
+async getRedemptionStatus(address: string) {
+  return this.rpc.query('redemption_status', address);
+}
+
+// GOOD: Method includes JSDoc and docs/api-reference.md is updated alongside it
+/**
+ * Returns the current redemption status for the given investor address.
+ *
+ * @param address - The investor's Stellar public key (`G...`).
+ * @returns `'pending' | 'approved' | 'rejected'` — the redemption state,
+ *          or `null` if no redemption request is on record.
+ * @throws {PortfolioError} If the address is invalid or the RPC call fails.
+ */
+async getRedemptionStatus(address: string): Promise<'pending' | 'approved' | 'rejected' | null> {
+  this.validateAddress(address);
+  try {
+    return await this.rpc.query('redemption_status', address);
+  } catch (error) {
+    throw new PortfolioError(`Failed to fetch redemption status for ${address}`, { cause: error });
+  }
+}
+```
+
+---
+
+## 6. Acceptable Contribution Example
+
+The following shows what a contribution that meets evaluation standards looks like across all five dimensions.
+
+**Scenario:** Add a `getRedemptionStatus` method to `InvestorModule`.
+
+```typescript
+// src/investor/portfolio.ts — complete, typed implementation with error handling
+async getRedemptionStatus(
+  address: string
+): Promise<'pending' | 'approved' | 'rejected' | null> {
+  this.validateAddress(address);
+  try {
+    return await this.rpc.query('redemption_status', address);
+  } catch (error) {
+    throw new PortfolioError(
+      `Failed to fetch redemption status for ${address}`,
+      { cause: error }
+    );
+  }
+}
+```
+
+```typescript
+// tests/investor.test.ts — covers happy path, null case, and error path
+describe('getRedemptionStatus', () => {
+  test('returns status when a redemption request exists', async () => {
+    mockClient.setRedemptionStatus('G_USER', 'pending');
+    const status = await aegis.investor.getRedemptionStatus('G_USER');
+    expect(status).toBe('pending');
+  });
+
+  test('returns null when no redemption request exists', async () => {
+    mockClient.setRedemptionStatus('G_USER', null);
+    const status = await aegis.investor.getRedemptionStatus('G_USER');
+    expect(status).toBeNull();
+  });
+
+  test('throws PortfolioError on RPC failure', async () => {
+    mockClient.simulateError('redemption_status', new Error('timeout'));
+    await expect(aegis.investor.getRedemptionStatus('G_USER'))
+      .rejects.toThrow(PortfolioError);
+  });
+});
+```
+
+**CI verification** (`npm run check` output pasted in the PR):
+```
+> npm run build    ✓  0 errors
+> npm test         ✓  all 42 tests passed
+> npm run test:compat  ✓  Node 20, Node 22 — pass
+```
+
+**Documentation** — `docs/api-reference.md` updated with full signature, parameter table, return values (including `null`), and thrown error class.
+
+A contribution structured this way fully satisfies the GrantFox evaluation criteria.
 
 ---
 

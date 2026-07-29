@@ -98,5 +98,6 @@ We welcome contributions! Please check our [CONTRIBUTING.md](CONTRIBUTING.md) fo
 ### Review Process
 PRs submitted to this repository are reviewed against our [Pull Request Reviewer Checklist](docs/reviewer-checklist.md), which covers code implementation, unit test coverage, CI build compatibility, API reference documentation, security/compliance, and acceptance criteria.
 
-Diff size alone does not determine whether a PR is acceptable — see the [Meaningful Change Threshold Guide](docs/meaningful-change-threshold.md) for how small-but-complete changes are distinguished from small-but-incomplete ones, and how reviewers should assess scope.
+### Acceptance Criteria Traceability
+Every PR **must** include an [acceptance criteria traceability table](docs/acceptance-criteria-traceability.md) that maps SDK modules, tests, docs, and behaviour verification to each acceptance criterion from the linked issue. This makes evaluation straightforward for maintainers and GrantFox reviewers.
 

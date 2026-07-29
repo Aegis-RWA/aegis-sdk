@@ -23,13 +23,25 @@ every submission includes:
 3. **Tests** — new or updated tests (or a written justification if not applicable).
 4. **Commands run** — pasted terminal output proving local verification passed.
 5. **CI status** — confirmation that all GitHub Actions checks are green.
-6. **Acceptance criteria coverage** — each criterion from the issue checked off.
+6. **Acceptance criteria audit** — each criterion from the issue mapped to
+   implementation, test, documentation, and status evidence.
 
 For detailed guidance on each item, see
 [`docs/pr-evidence-checklist.md`](docs/pr-evidence-checklist.md).
+Use the reusable
+[`docs/acceptance-criteria-audit.md`](docs/acceptance-criteria-audit.md)
+template for criterion-level evidence and incomplete criteria handling.
 
 PRs that do not complete the checklist may be returned for revision before
 review begins.
+
+## Payment-Period Conduct
+
+During and after GrantFox evaluation periods, contributors are expected to keep community channels free of repeated payment inquiries. Before raising any concern, self-review your contribution: confirm CI is green, all acceptance criteria are met, and you have checked the GrantFox platform directly for your evaluation status.
+
+See [docs/payment-period-conduct.md](docs/payment-period-conduct.md) for the full conduct guidelines, self-review checklist, and escalation process.
+
+---
 
 ## Updating API Reference Documentation
 
