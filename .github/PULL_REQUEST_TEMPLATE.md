@@ -78,12 +78,18 @@ npm run check
 
 ### 6. Acceptance Criteria Coverage
 
-Copy the acceptance criteria from the linked issue and check off each item
-that this PR satisfies.
+Use the traceability table to map each acceptance criterion from the linked
+issue to implementation evidence and tests. See
+[`docs/acceptance-criteria-traceability.md`](../docs/acceptance-criteria-traceability.md)
+for column definitions, a worked example, and guidance on marking partial or
+deferred criteria.
 
-- [ ] <!-- Criterion 1 from the issue -->
-- [ ] <!-- Criterion 2 from the issue -->
-- [ ] <!-- Add more as needed -->
+| # | Acceptance Criterion | Status | Implementation Evidence | Tests |
+|---|---|---|---|---|
+| 1 | <!-- criterion text --> | ✅ Done / ⚠️ Partial / ❌ Not done | <!-- file, function, or section --> | <!-- test file + test name, or "N/A — docs only" --> |
+| 2 | <!-- criterion text --> | ✅ Done / ⚠️ Partial / ❌ Not done | <!-- file, function, or section --> | <!-- test file + test name, or "N/A — docs only" --> |
+
+<!-- Add one row per acceptance criterion from the issue. -->
 
 ---
 
