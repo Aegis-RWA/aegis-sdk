@@ -8,7 +8,7 @@ We welcome open-source contributions! As middleware, this SDK is critical for th
 3. **Branching:** Use `feat/`, `fix/`, or `chore/` prefixes.
 4. **Testing:** You MUST write unit tests in `tests/` for any new methods added. PRs without test coverage will be rejected. For predictable SDK responses without live RPC, use the mock client from `@aegis/sdk/testing` (see `docs/testing.md`).
 5. **Formatting:** Ensure `npm run lint` and `npm run format` pass before opening a PR.
-6. **CI Verification:** Run `npm run check` locally to verify that build, unit tests, and runtime compatibility checks pass. PRs with failing GitHub Actions CI checks will not be reviewed or merged until all status checks are green (see [CI Resolution Workflow](docs/ci-resolution-workflow.md)).
+6. **CI Verification:** Run `npm run check` locally to verify that build, unit tests, and runtime compatibility checks pass. PRs with failing GitHub Actions CI checks will not be reviewed or merged until all status checks are green (see [CI Pass Requirements](docs/ci-pass-requirements.md) and [CI Resolution Workflow](docs/ci-resolution-workflow.md)).
 
 Search the codebase for `// TODO:` comments to find areas that need immediate help!
 
