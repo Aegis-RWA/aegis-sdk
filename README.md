@@ -9,27 +9,70 @@ npm install @aegis/sdk
 ```
 
 ## Quickstart
-Initialize the client with a typed environment preset and query the compliance module.
-```TypeScript
-import { AegisClient } from '@aegis/sdk';
+
+Use the role-aware factory to construct a client with explicit capability
+intent. The returned object only exposes modules and operations that are
+appropriate for the declared role.
+
+```typescript
+import {
+  createReadOnlyClient,
+  createInvestorClient,
+  createIssuerClient,
+  createAdminClient,
+} from '@aegis/sdk';
 import { Keypair } from '@stellar/stellar-sdk';
 
-const adminKeypair = Keypair.fromSecret('S...');
+// Read-only — no keypair needed. Suitable for dashboards and indexers.
+const reader = createReadOnlyClient({
+  environment: 'testnet',
+  contractId: 'C_YOUR_CONTRACT_ID',
+});
+const isApproved = await reader.compliance.checkWhitelist('G_USER_PUBLIC_KEY');
+const portfolio  = await reader.investor.getPortfolio('G_USER_PUBLIC_KEY');
+
+// Investor — keypair required. Transfer capability only.
+const investor = createInvestorClient({
+  environment: 'testnet',
+  contractId: 'C_YOUR_CONTRACT_ID',
+  keypair: Keypair.fromSecret('S_INVESTOR_SECRET'),
+});
+await investor.asset.transfer('G_RECIPIENT', 100);
+
+// Issuer — keypair required. Adds asset minting.
+const issuer = createIssuerClient({
+  environment: 'testnet',
+  contractId: 'C_YOUR_CONTRACT_ID',
+  keypair: Keypair.fromSecret('S_ISSUER_SECRET'),
+});
+await issuer.asset.mint('G_INVESTOR', 5000);
+
+// Admin — keypair required. Full access.
+const admin = createAdminClient({
+  environment: 'testnet',
+  contractId: 'C_YOUR_CONTRACT_ID',
+  keypair: Keypair.fromSecret('S_ADMIN_SECRET'),
+});
+admin.assertAdminAccess(); // explicit guard before privileged call
+await admin.asset.mint('G_INVESTOR', 10000);
+```
+
+See [Role-Aware Client Factory](./docs/role-aware-client-factory.md) for the
+full capability matrix, `compliance-operator` usage, error handling, and
+security notes.
+
+For direct `AegisClient` construction (advanced / custom setups):
+
+```typescript
+import { AegisClient } from '@aegis/sdk';
 
 const aegis = new AegisClient({
-  environment: 'testnet', // or 'local'; see docs/environments.md
+  environment: 'testnet',
   contractId: 'C_YOUR_CONTRACT_ID',
-  keypair: adminKeypair // Optional for read-only calls
+  keypair: Keypair.fromSecret('S...'), // optional for read-only
 });
-
-async function main() {
-  // Check if a user is KYC compliant
-  const isApproved = await aegis.compliance.checkWhitelist('G_USER_PUBLIC_KEY');
-  console.log('Is User Whitelisted?', isApproved);
-}
-
-main();
 ```
+
 ## Role Discovery & Capability Checks
 Check what an address is classified as, and what it can currently attempt through the SDK.
 This is a client-side convenience for UI gating, not on-chain authorization — see the
@@ -84,6 +127,8 @@ submitting a PR:
 npm run verify
 ```
 
+See [Test-First Contribution Guide](docs/test-first-contribution.md) for when behavior changes need happy-path, negative-path, and no-test justification coverage.
+
 See [Verification Command](docs/verification.md) for detailed usage and
 troubleshooting guidance.
 
@@ -94,6 +139,8 @@ For step-by-step instructions on reproducing and fixing CI check failures, see t
 
 ## Contributing
 We welcome contributions! Please check our [CONTRIBUTING.md](CONTRIBUTING.md) for our branching strategy and code style guidelines.
+
+Before submitting a PR, follow our [Test-First Contribution Guide](docs/test-first-contribution-guide.md) to understand when tests are required, what type of tests are expected per module, and how to prove your change works correctly.
 
 ### Review Process
 PRs submitted to this repository are reviewed against our [Pull Request Reviewer Checklist](docs/reviewer-checklist.md), which covers code implementation, unit test coverage, CI build compatibility, API reference documentation, security/compliance, and acceptance criteria.

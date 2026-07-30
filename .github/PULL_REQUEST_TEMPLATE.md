@@ -76,17 +76,22 @@ npm run check
 
 </details>
 
-### 6. Acceptance Criteria Coverage
+### 6. Acceptance Criteria Coverage — Traceability Table
 
-Copy the acceptance criteria from the linked issue and check off each item
-that this PR satisfies.
+Copy the acceptance criteria from the linked issue into the table below and
+map each to SDK modules, tests, docs, and behaviour verification.
+See [`docs/acceptance-criteria-traceability.md`](../docs/acceptance-criteria-traceability.md) for the table format, SDK module map, test map, and documentation map.
 
-- [ ] <!-- Criterion 1 from the issue -->
-- [ ] <!-- Criterion 2 from the issue -->
-- [ ] <!-- Add more as needed -->
+| # | Acceptance Criterion | SDK Module(s) | Test(s) | Doc(s) | Behaviour Verification |
+|---|---|---|---|---|---|
+| 1 | <!-- Criterion 1 from the issue --> | <!-- e.g. `src/role.ts` --> | <!-- e.g. `tests/role.test.ts` --> | <!-- e.g. `docs/api-reference.md` --> | <!-- e.g. `expect(result).toBe(true)` --> |
+| 2 | <!-- Criterion 2 from the issue --> | <!-- --> | <!-- --> | <!-- --> | <!-- --> |
+| 3 | <!-- Add more as needed --> | <!-- --> | <!-- --> | <!-- --> | <!-- --> |
 
 ---
 
 ## Reviewer Notes
+
+> Reviewers: please verify this PR against the [Pull Request Reviewer Checklist](../docs/reviewer-checklist.md) before approving.
 
 <!-- Optional: call out areas that need careful review, known trade-offs, or follow-up work. -->
