@@ -9,6 +9,7 @@ export type ContractEventKind =
   | 'transfer'
   | 'admin'
   | 'asset_metadata'
+  | 'role'
   | 'unknown';
 
 export interface ContractEventEnvelope {
@@ -60,6 +61,14 @@ export interface AssetMetadataContractEvent extends ContractEventEnvelope {
   isRwa?: boolean;
 }
 
+export interface RoleContractEvent extends ContractEventEnvelope {
+  kind: 'role';
+  action: 'role_grant' | 'role_revoke';
+  address: string;
+  role: string;
+  admin?: string;
+}
+
 export interface UnknownContractEvent extends ContractEventEnvelope {
   kind: 'unknown';
   rawTopics: unknown[];
@@ -73,6 +82,7 @@ export type AegisContractEvent =
   | TransferContractEvent
   | AdminContractEvent
   | AssetMetadataContractEvent
+  | RoleContractEvent
   | UnknownContractEvent;
 
 /**
