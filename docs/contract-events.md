@@ -11,6 +11,7 @@ The contract event decoder turns raw Soroban RPC events into typed Aegis audit-t
 | Compliance | `whitelist_add`, `whitelist_remove` | `kind: 'compliance'` |
 | Minting | `mint`, `mint_asset` | `kind: 'mint'` |
 | Transfers | `transfer` | `kind: 'transfer'` |
+| Role | `role_grant`, `role_revoke` | `kind: 'role'` |
 | Admin | `protocol_pause`, `protocol_unpause`, `asset_register` | `kind: 'admin'` |
 | Asset metadata | `asset_metadata` | `kind: 'asset_metadata'` |
 | Unknown | any other topic or malformed payload | `kind: 'unknown'` |
@@ -69,6 +70,9 @@ for (const event of events) {
     case 'mint':
     case 'transfer':
       // render transaction history row
+      break;
+    case 'role':
+      // render role assignment changes
       break;
     case 'admin':
       // render admin action timeline

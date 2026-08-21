@@ -17,6 +17,7 @@ import {
   ContractEventEnvelope,
   DecodeContractEventOptions,
   MintContractEvent,
+  RoleContractEvent,
   TransferContractEvent,
   UnknownContractEvent,
 } from '../types/contract-event';
@@ -89,6 +90,10 @@ export function decodeContractEvent(
       return decodeAdminEvent(envelope, 'asset_register', decodedTopics, decodedValue, options);
     case AEGIS_EVENT_TOPICS.ASSET_METADATA:
       return decodeAssetMetadataEvent(envelope, decodedTopics, decodedValue, options);
+    case AEGIS_EVENT_TOPICS.ROLE_GRANT:
+      return decodeRoleEvent(envelope, 'role_grant', decodedTopics, decodedValue, options);
+    case AEGIS_EVENT_TOPICS.ROLE_REVOKE:
+      return decodeRoleEvent(envelope, 'role_revoke', decodedTopics, decodedValue, options);
     default:
       if (options.strict) {
         throw new EventDecodeError(
@@ -368,6 +373,47 @@ function decodeAssetMetadataEvent(
     decimals,
     ...(typeof category === 'string' ? { category } : {}),
     ...(typeof isRwa === 'boolean' ? { isRwa } : {}),
+  };
+}
+
+function decodeRoleEvent(
+  envelope: ContractEventEnvelope,
+  action: RoleContractEvent['action'],
+  topics: unknown[],
+  value: unknown,
+  options: DecodeContractEventOptions
+): RoleContractEvent | UnknownContractEvent {
+  const address =
+    normalizeAddress(topics[1]) ??
+    normalizeAddress(readPayloadField(value, 'address')) ??
+    normalizeAddress(readPayloadField(value, 'investor'));
+
+  const role =
+    (readPayloadField(value, 'role') as string | undefined) ??
+    (typeof topics[2] === 'string' ? topics[2] : undefined);
+
+  if (!address || typeof role !== 'string') {
+    return failOrUnknown(
+      envelope,
+      topics,
+      value,
+      options,
+      'Role event is missing address or role.'
+    );
+  }
+
+  const admin =
+    normalizeAddress(readPayloadField(value, 'admin')) ??
+    normalizeAddress(readPayloadField(value, 'operator')) ??
+    undefined;
+
+  return {
+    ...envelope,
+    kind: 'role',
+    action,
+    address,
+    role,
+    ...(admin ? { admin } : {}),
   };
 }
 
